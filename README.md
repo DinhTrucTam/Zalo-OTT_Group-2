@@ -29,3 +29,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 Login page ![image](https://github.com/user-attachments/assets/20e8f245-d188-46be-88c1-d6d0e59b5736)
 Signup page ![image](https://github.com/user-attachments/assets/93ecf195-83d9-4f70-82b5-1679cd981ab0)
 
+Credentials when signing up are being stored in Local Storage of the web
+
