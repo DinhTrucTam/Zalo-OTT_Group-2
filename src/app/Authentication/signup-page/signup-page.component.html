@@ -1,0 +1,24 @@
+<div class="sign-up-container">
+    <img src="assets/Logo_Zalo.png" alt="Zalo-top-logo" class="sign-up-image">
+
+    <div class="sign-up-card">
+        <h2>Bạn chưa có tài khoản Zalo Web?</h2>
+        <p>Xin vui lòng điền các thông tin sau</p>
+        <form>
+            <label for="phone">Số điện thoại</label>
+            <input type="phone" id="phone" placeholder="Nhập số điện thoại của bạn" [(ngModel)]="signupObj.phoneNumber" name="phone" required />
+
+            <label for="password">Mật khẩu</label>
+            <input type="password" id="password" placeholder="Nhập mật khẩu của bạn" [(ngModel)]="signupObj.password" name="pass" required />
+
+            <label for="password-1">Nhập lại mật khẩu</label>
+            <input type="password" id="password-1" placeholder="Nhập lại mật khẩu của bạn" [(ngModel)]="signupObj.password_2" name="pass2" required />
+
+            <button type="submit" (click)="onSignUp()">Đăng ký tài khoản Zalo Web</button>
+        </form>
+        <div class="alt-sign-up">
+            <p>hoặc đăng ký qua</p>
+            <button class="google-btn">Google</button>
+        </div>
+    </div>
+</div>

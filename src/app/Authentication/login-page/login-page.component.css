@@ -1,0 +1,146 @@
+html,
+body {
+    font-family: Arial, sans-serif;
+    background-color: #a7c7e7;
+    height: 100%;
+    /* Ensure body takes full height */
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-image {
+    display: block;
+    margin: 0 auto 20px;
+    /* Center the image and add space below */
+    max-width: 10%;
+    /* Ensure the image doesn't overflow the container */
+    height: auto;
+    /* Keeps image proportional */
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    /* Stack the image and card vertically */
+    align-items: center;
+    /* Center the items horizontally */
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    /* Full viewport height */
+    padding: 20px;
+    /* Optional padding */
+    box-sizing: border-box;
+    /* Include padding in width/height */
+}
+
+.login-card {
+    width: 100%;
+    /* Allow it to take full width */
+    max-width: 400px;
+    /* Set a max width for larger screens */
+    padding: 20px;
+    background-color: #fff;
+    /* White background for the card */
+    border-radius: 12px;
+    /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Shadow for depth */
+    text-align: center;
+    /* Center text inside the card */
+}
+
+h2 {
+    color: #407bff;
+    font-size: 20px;
+    margin: 0 0 0.5rem;
+    font-family: "Helvetica Neue",
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+p {
+    color: #6c757d;
+    margin: 0.5rem 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+label {
+    color: #6c757d;
+    font-size: 14px;
+    text-align: left;
+}
+
+input[type="phone"],
+input[type="password"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #a7c7e7;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="phone"]:focus,
+input[type="password"]:focus {
+    border-color: #407bff;
+}
+
+button {
+    background-color: #407bff;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #356acf;
+}
+
+.alt-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.google-btn {
+    background-color: #db4437;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.google-btn:hover {
+    background-color: #c73a2f;
+}
+
+.footer {
+    margin-top: 1.5rem;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #407bff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}

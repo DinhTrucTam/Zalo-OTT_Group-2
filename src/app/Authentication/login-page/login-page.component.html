@@ -1,0 +1,27 @@
+<div class="login-container">
+    <img src="assets/Logo_Zalo.png" alt="Zalo-top-logo" class="login-image">
+
+    <div class="login-card">
+        <h2>Đăng nhập tài khoản Zalo <br>
+            để kết nối với ứng dụng Zalo Web
+        </h2>
+        <br><br>
+        <form>
+            <label for="phone">Số điện thoại</label>
+            <input type="phone" id="email" placeholder="nhập số điện thoại của bạn" required [(ngModel)]="loginObj.phoneNumber" name="phone"/>
+
+            <label for="password">Mật khẩu</label>
+            <input type="password" id="password" placeholder="nhập mật khẩu của bạn" required [(ngModel)]="loginObj.password" name="pass"/>
+
+            <button type="submit" (click)="onLogin()">Đăng nhập với mật khẩu</button>
+        </form>
+        <div class="alt-login">
+            <p>hoặc đăng nhập qua</p>
+            <button class="google-btn">Google</button>
+        </div>
+        <div class="footer">
+            <p>Bạn chưa có tài khoản? <a [routerLink]="['/sign-up']">Đăng ký ngay</a></p>
+            <p><a href="#">Quên mật khẩu?</a></p>
+        </div>
+    </div>
+</div>
