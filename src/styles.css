@@ -9,6 +9,7 @@ body {
 
     .mat-mdc-tab-header {
         --mdc-secondary-navigation-tab-container-height: 25px;
+
     }
 
     .mdc-tab {
@@ -17,6 +18,10 @@ body {
 
     .mdc-tab-indicator__content--underline {
         width: 65%;
+    }
+
+    .mat-mdc-tab-label-container {
+        flex-grow: 0;
     }
 }
 

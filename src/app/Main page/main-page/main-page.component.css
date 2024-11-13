@@ -5,7 +5,7 @@
 
 /* Left Sidebar */
 .sidebar {
-    width: 73px;
+    width: 67px;
     background-color: #0091ff;
     display: flex;
     flex-direction: column;
@@ -96,7 +96,7 @@
 
 /* Middle Panel (Chat List) */
 .chat-list-panel {
-    width: 382px;
+    width: 343px;
     background-color: #fff;
     border-right: 1px solid #ddd;
     overflow-y: auto;
@@ -174,8 +174,8 @@
 }
 
 .custom-tab-label {
-    font-weight: bold;
-    font-size: 0.875rem;
+    font-weight: 630;
+    font-size: 0.8rem;
     font-family: SegoeuiPc,
         Segoe UI,
         San Francisco,
