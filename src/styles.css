@@ -2,6 +2,24 @@
 /* Example custom styles */
 @import 'ngx-toastr/toastr';
 
+
+/*reset the default css: margin: 8px*/
+body {
+    margin: 0;
+
+    .mat-mdc-tab-header {
+        --mdc-secondary-navigation-tab-container-height: 25px;
+    }
+
+    .mdc-tab {
+        padding: 0 0;
+    }
+
+    .mdc-tab-indicator__content--underline {
+        width: 65%;
+    }
+}
+
 .toast-success {
     background-color: #28a745;
     /* green */

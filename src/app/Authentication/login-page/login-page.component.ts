@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login-page',
@@ -11,6 +12,8 @@ export class LoginPageComponent implements OnInit {
     phoneNumber: '',
     password: ''
   };
+
+  constructor(private toastr: ToastrService){}
 
   currentsignUpUsers: any;
   ngOnInit(): void {
@@ -28,10 +31,10 @@ export class LoginPageComponent implements OnInit {
       && m.password == this.loginObj.password
       && m.password_2 == this.loginObj.password);
     if (isUserExist != undefined) {
-      alert('User login successfully');
+      this.toastr.success('Tài khoản của bạn được tạo thành công!', 'Success');
     }
     else {
-      alert('Wrong credentials');
+      this.toastr.error('Đăng nhập thất bại!', 'Error');
     }
   }
 }

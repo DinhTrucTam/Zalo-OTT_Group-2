@@ -79,9 +79,9 @@ label {
     text-align: left;
 }
 
-input[type="phone"],
+input[type="tel"],
 input[type="password"],
-input[type="password-1"] {
+input[type="password_2"] {
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #a7c7e7;
@@ -90,9 +90,9 @@ input[type="password-1"] {
     transition: border-color 0.3s;
 }
 
-input[type="phone"]:focus,
+input[type="tel"]:focus,
 input[type="password"]:focus,
-input[type="password-1"]:focus {
+input[type="password_2"]:focus {
     border-color: #407bff;
 }
 

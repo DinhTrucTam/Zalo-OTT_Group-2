@@ -1,0 +1,233 @@
+<div class="main-container">
+    <!-- Left Sidebar (Menu) -->
+    <aside class="sidebar">
+        <!-- Top Section -->
+        <div class="sidebar-top">
+            <div class="profile-section">
+                <!-- User profile or other content goes here -->
+                <img src="assets/WIN_20230303_19_57_15_Pro.jpg" alt="Profile" class="profile-image">
+            </div>
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/chatbubble.png" alt="chat-icon">
+                </div>
+            </div>
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/contact-book.png" alt="chat-icon">
+                </div>
+            </div>
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/checkbox.png" alt="chat-icon">
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="sidebar-bottom">
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/cloud.png" alt="chat-icon">
+                </div>
+            </div>
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/briefcase.png" alt="chat-icon">
+                </div>
+            </div>
+            <div class="clickable" (click)="onClick()">
+                <div class="img-container">
+                    <img src="assets/settings.png" alt="chat-icon">
+                </div>
+            </div>
+        </div>
+    </aside>
+    <!-- Middle Panel (Chat List) -->
+    <section class="chat-list-panel">
+        <div id="contact-search-grid" class="grid-setting" style="grid-template-columns: auto 32px 32px;">
+            <div class="group-search-item">
+                <div style="display: block;">
+                    <img src="assets/search.png" alt="chat-icon" class="search-container click">
+                </div>
+                <input type="text" placeholder="Tìm kiếm" class="search-bar-input">
+            </div>
+        </div>
+
+        <mat-tab-group animationDuration="0ms" class="tabs">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="custom-tab-label">Tất cả</span>
+                </ng-template>
+
+                <ul class="chat-list">
+                    <li class="chat-item">
+                        <div class="chat-info">
+                            <p class="chat-name">Cloud của tôi</p>
+                            <p class="last-message">Bạn:...</p>
+                        </div>
+                        <span class="chat-time">19/10</span>
+                    </li>
+                    <li class="chat-item">
+                        <div class="chat-info">
+                            <p class="chat-name">Cloud của tôi</p>
+                            <p class="last-message">Bạn:...</p>
+                        </div>
+                        <span class="chat-time">19/10</span>
+                    </li>
+                    <li class="chat-item">
+                        <div class="chat-info">
+                            <p class="chat-name">Cloud của tôi</p>
+                            <p class="last-message">Bạn:...</p>
+                        </div>
+                        <span class="chat-time">19/10</span>
+                    </li>
+                    <li class="chat-item">
+                        <div class="chat-info">
+                            <p class="chat-name">Cloud của tôi</p>
+                            <p class="last-message">Bạn:...</p>
+                        </div>
+                        <span class="chat-time">19/10</span>
+                    </li>
+                </ul>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <span class="custom-tab-label">Chưa đọc</span>
+                </ng-template>
+                Không có nội dung chưa đọc
+            </mat-tab>
+        </mat-tab-group>
+    </section>
+
+    <!-- Right Panel (Main Content) -->
+    <main class="content">
+        <!-- <div class="welcome">
+            <h2>Chào mừng đến với Zalo PC!</h2>
+            <p>Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng <br>
+                người thân, bạn bè được tối ưu hóa cho máy tính của bạn.</p>
+        </div>
+        <img src="assets/Logo_Zalo.png" alt="Welcome Image" class="welcome-image">
+
+
+        <ng-template #conversationBox>
+
+            <div class="conversation-header">
+                <div class="conversation-header-left">
+                    <img src="assets/user-avatar.png" alt="User Avatar" class="header-avatar">
+                    <span class="header-username">User Name</span>
+                </div>
+                <div class="conversation-header-right">
+                    <button class="header-btn" title="Video Call" aria-label="Start video call">
+                        <img src="assets/video-call-icon.png" alt="Video Call">
+                    </button>
+
+                    <button class="header-btn" title="Search in Conversation">
+                        <img src="assets/search-icon.png" alt="Search">
+                    </button>
+                    <button class="header-btn" title="Add User">
+                        <img src="assets/add-user-icon.png" alt="Add User">
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="chatting-part">
+                <div class="message">Hello!</div>
+                <div class="message">How are you?</div>
+
+            </div>
+
+
+            <div class="features-part">
+                <button class="feature-btn" title="Emojis">
+                    <img src="assets/emoji-icon.png" alt="Emojis">
+                </button>
+                <button class="feature-btn" title="Send Image">
+                    <img src="assets/image-icon.png" alt="Send Image">
+                </button>
+                <button class="feature-btn" title="Send File">
+                    <img src="assets/file-icon.png" alt="Send File">
+                </button>
+            </div>
+
+
+            <div class="typing-part">
+                <input type="text" placeholder="Type a message..." class="message-input">
+                <button class="icon-btn">
+                    <img src="assets/select-icon.png" alt="Select Icon">
+                </button>
+                <button class="like-btn">
+                    <img src="assets/like-icon.png" alt="Like">
+                </button>
+            </div>
+        </ng-template> -->
+
+        <div *ngIf="!selectedConversation; else conversationBox">
+            <h2>Chào mừng đến với Zalo PC!</h2>
+            <p>Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng <br>
+                người thân, bạn bè được tối ưu hóa cho máy tính của bạn.</p>
+            <img src="assets/Logo_Zalo.png" alt="Welcome Image" class="welcome-image">
+
+            <!-- Conversations list -->
+            <div class="conversation-list">
+                <div *ngFor="let conversation of conversations" (click)="selectConversation(conversation)"
+                    class="conversation-item">
+                    <p>{{ conversation.userName }}</p>
+                    <p>{{ conversation.lastMessage }}</p>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #conversationBox>
+            <!-- Display the conversation box here -->
+            <div class="conversation-header">
+                <div class="conversation-header-left">
+                    <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                    <span class="header-username">{{ selectedConversation?.userName }}</span>
+                </div>
+                <div class="conversation-header-right">
+                    <button class="header-btn" title="Add User">
+                        <img src="assets/people.png" alt="Add User">
+                    </button>
+                    <button class="header-btn" title="Search in Conversation">
+                        <img src="assets/search.png" alt="Search">
+                    </button>
+                    <button class="header-btn" title="Video Call">
+                        <img src="assets/camera.png" alt="Video Call">
+                    </button>
+                </div>
+            </div>
+            <div class="chatting-part">
+                <div class="message">Hello!</div>
+                <div class="message">How are you?</div>
+
+            </div>
+
+
+            <div class="features-part">
+                <button class="feature-btn" title="Stickers">
+                    <img src="assets/sticker (1).png" alt="Stickers">
+                </button>
+                <button class="feature-btn" title="Send Image">
+                    <img src="assets/image.png" alt="Send Image">
+                </button>
+                <button class="feature-btn" title="Send File">
+                    <img src="assets/attach.png" alt="Send File">
+                </button>
+            </div>
+
+
+            <div class="typing-part">
+                <input type="text" placeholder="Type a message..." class="message-input">
+                <button class="icon-btn">
+                    <img src="assets/smile.png" alt="Select Icon">
+                </button>
+                <button class="like-btn">
+                    <img src="assets/like.png" alt="Like">
+                </button>
+            </div>
+        </ng-template>
+    </main>
+</div>
