@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule } from '@angular/material/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -32,6 +36,10 @@ import { MainPageComponent } from './Main page/main-page/main-page.component';
     MatSidenavModule,
     MatTabsModule,
     MatIconModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    MatInputModule,
+    MatFormFieldModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
       timeOut: 3000, // duration for which the toast will be displayed

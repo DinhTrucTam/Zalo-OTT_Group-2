@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -13,7 +14,7 @@ export class LoginPageComponent implements OnInit {
     password: ''
   };
 
-  constructor(private toastr: ToastrService){}
+  constructor(private router: Router, private toastr: ToastrService) { }
 
   currentsignUpUsers: any;
   ngOnInit(): void {
@@ -31,7 +32,10 @@ export class LoginPageComponent implements OnInit {
       && m.password == this.loginObj.password
       && m.password_2 == this.loginObj.password);
     if (isUserExist != undefined) {
-      this.toastr.success('Tài khoản của bạn được tạo thành công!', 'Success');
+      this.toastr.success('Chào mừng bạn quay trở lại!', 'Success');
+      setTimeout(() => {
+        this.router.navigate(['/main-page']);
+      }, 100);
     }
     else {
       this.toastr.error('Đăng nhập thất bại!', 'Error');

@@ -62,7 +62,7 @@ export class SignupPageComponent implements OnInit {
         this.toastr.success('Tài khoản của bạn được tạo thành công!', 'Success');
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 500);
+        }, 100);
       }
     }
   }

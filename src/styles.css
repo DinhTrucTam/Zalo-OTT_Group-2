@@ -9,7 +9,7 @@ body {
 
     .mat-mdc-tab-header {
         --mdc-secondary-navigation-tab-container-height: 25px;
-
+        --mat-tab-header-label-text-tracking: 0;
     }
 
     .mdc-tab {
