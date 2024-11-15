@@ -37,7 +37,7 @@
 .clickable {
     width: 100%;
     /* Ensure the item fills the full width */
-    padding: 22px 0;
+    padding: 18px 0;
     /* Remove left and right padding to allow full background color coverage */
     text-align: center;
     cursor: pointer;
@@ -203,7 +203,8 @@
 }
 
 .chat-info {
-    flex-grow: 1;
+    display: flex;
+    align-items: center;
 }
 
 .chat-name {
@@ -231,6 +232,8 @@
 .last-message {
     font-size: 1em;
     color: #666;
+    margin: 0;
+    padding-top: 5px;
 }
 
 .chat-time {
@@ -247,7 +250,7 @@
     height: 100%;
 }
 
-.welcome-page{
+.welcome-page {
     align-items: center;
     text-align: center;
 }
@@ -277,8 +280,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: #f5f5f5;
 }
 
@@ -307,6 +312,13 @@
     cursor: pointer;
     padding: 5px;
     margin-left: 5px;
+    border-radius: 30%;
+    transition: background-color 0.3s;
+}
+
+.conversation-header-right .header-btn:hover {
+    background-color: #e0d9d9;
+    cursor: pointer;
 }
 
 .header-btn img {
@@ -315,12 +327,12 @@
 }
 
 .chatting-part {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* flex-grow: 1; */
     padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
     overflow-y: auto;
-    background-color: #fff;
+    background-color: #e0e0e0;
     height: calc(100vh - 213px);
 }
 
@@ -328,20 +340,46 @@
     background-color: #e0e0e0;
     padding: 10px;
     border-radius: 8px;
-    margin: 5px 0;
-    max-width: 75%;
+    margin: 10px 0;
+    max-width: fit-content;
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
+}
+
+.message.you {
+    align-self: flex-start;
+    background-color: #fff;
+    border: 1px solid #005ae0;
+    color: #081b3a;
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 .message.sender {
-    background-color: #0091ff;
-    color: white;
     align-self: flex-end;
+    background-color: #e5efff;
+    color: #081b3a;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-size: .9375rem;
+    font-weight: 400;
+    line-height: 1.5;
 }
 
 /* Feature Buttons */
 .features-part {
     display: flex;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border-top: 1px solid #868585;
     /* justify-content: space-around; */
 }
@@ -350,12 +388,15 @@
     background: none;
     border: none;
     cursor: pointer;
-    margin: 0 10px;
+    margin: 0 5px;
     transition: background-color 0.3s;
+    border-radius: 30%;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .feature-btn:hover {
-    background-color: #f1f1f1;
+    background-color: #e0d9d9;
     cursor: pointer;
 }
 
@@ -367,7 +408,7 @@
 .typing-part {
     display: flex;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border-top: 1px solid #ddd;
     background-color: #f9f9f9;
     justify-content: space-between;
@@ -377,7 +418,7 @@
     flex-grow: 1;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 20px;
+    border-radius: 10px;
     margin-right: 10px;
     font-size: 1rem;
     background-color: #f0f0f0;
@@ -389,6 +430,16 @@
     border: none;
     cursor: pointer;
     margin-left: 5px;
+    border-radius: 30%;
+    transition: background-color 0.3s;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.icon-btn:hover,
+.like-btn:hover {
+    background-color: #e0d9d9;
+    cursor: pointer;
 }
 
 .icon-btn img,

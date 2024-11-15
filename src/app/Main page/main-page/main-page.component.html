@@ -70,9 +70,16 @@
                 <!-- Chat List (User Selection) -->
                 <ul class="chat-list">
                     <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
-                        <div class="chat-info">
+                        <!-- <div class="chat-info">
                             <p class="chat-name">{{ user.userName }}</p>
                             <p class="last-message">Bạn:...</p>
+                        </div> -->
+                        <div class="chat-info">
+                            <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                            <div>
+                                <p class="chat-name">{{ user.userName }}</p>
+                                <p class="last-message">Bạn:...</p>
+                            </div>
                         </div>
                         <span class="chat-time">19/10</span>
                     </li>
@@ -120,9 +127,9 @@
 
             <!-- Conversation Messages -->
             <div class="chatting-part">
-                <div *ngFor="let message of getSelectedUserConversation()" [class.you]="message.sender === 'You'"
-                    class="message">
-                    <strong>{{ message.sender }}:</strong> {{ message.message }}
+                <div *ngFor="let message of getSelectedUserConversation()"
+                    [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
+                    <strong>{{ message.sender }}</strong> <br> <br> {{ message.message }}
                 </div>
             </div>
 
