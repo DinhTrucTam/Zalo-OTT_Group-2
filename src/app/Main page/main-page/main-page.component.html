@@ -70,10 +70,6 @@
                 <!-- Chat List (User Selection) -->
                 <ul class="chat-list">
                     <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
-                        <!-- <div class="chat-info">
-                            <p class="chat-name">{{ user.userName }}</p>
-                            <p class="last-message">Bạn:...</p>
-                        </div> -->
                         <div class="chat-info">
                             <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
                             <div>
@@ -124,26 +120,42 @@
                     </button>
                 </div>
             </div>
-
             <!-- Conversation Messages -->
             <div class="chatting-part">
                 <div *ngFor="let message of getSelectedUserConversation()"
                     [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
-                    <strong>{{ message.sender }}</strong> <br> <br> {{ message.message }}
+
+                    <!-- Safely display the message content (whether text or HTML) -->
+                    <div *ngIf="message.message" [innerHTML]="message.message"></div>
+
+                    <!-- Optional: If you're showing an image, you can do it like this -->
+                    <ng-container *ngIf="isImage(message.message)">
+                        <img [src]="getImageSrc(message.message)" alt="Image Message" class="chat-image">
+                    </ng-container>
                 </div>
             </div>
 
             <!-- Chat Input Features -->
+            <!-- Chat Input Features -->
             <div class="features-part">
-                <button class="feature-btn" title="Stickers">
-                    <img src="assets/sticker (1).png" alt="Stickers">
-                </button>
-                <button class="feature-btn" title="Send Image">
+                <!-- Image Upload -->
+                <button class="feature-btn" title="Send Image" (click)="triggerFileInput('image')">
                     <img src="assets/image.png" alt="Send Image">
                 </button>
-                <button class="feature-btn" title="Send File">
+                <input type="file" #imageInput accept="image/*" (change)="handleFileInput($event, 'image')" hidden>
+
+                <!-- Video Upload -->
+                <button class="feature-btn" title="Send Video" (click)="triggerFileInput('video')">
+                    <img src="assets/video.png" alt="Send Video">
+                </button>
+                <input type="file" #videoInput accept="video/*" (change)="handleFileInput($event, 'video')" hidden>
+
+                <!-- Document Upload -->
+                <button class="feature-btn" title="Send File" (click)="triggerFileInput('document')">
                     <img src="assets/attach.png" alt="Send File">
                 </button>
+                <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt"
+                    (change)="handleFileInput($event, 'document')" hidden>
             </div>
 
             <!-- Typing Input -->

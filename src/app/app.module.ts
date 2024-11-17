@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { GoogleAuthorizationComponent } from './Authentication/google-authorization/google-authorization.component';
 import { MainPageComponent } from './Main page/main-page/main-page.component';
+import { SafeHtmlPipe } from './safe-html.pipe';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { MainPageComponent } from './Main page/main-page/main-page.component';
     SignupPageComponent,
     GoogleAuthorizationComponent,
     MainPageComponent,
+    SafeHtmlPipe,
   ],
   imports: [
     BrowserModule,
