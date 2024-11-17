@@ -120,6 +120,7 @@
                     </button>
                 </div>
             </div>
+
             <!-- Conversation Messages -->
             <div class="chatting-part">
                 <div *ngFor="let message of getSelectedUserConversation()"
@@ -130,7 +131,7 @@
 
                     <!-- Optional: If you're showing an image, you can do it like this -->
                     <ng-container *ngIf="isImage(message.message)">
-                        <img [src]="getImageSrc(message.message)" alt="Image Message" class="chat-image">
+                        <img [src]="getImageSrc(message.message)" alt="Image Message">
                     </ng-container>
                 </div>
             </div>

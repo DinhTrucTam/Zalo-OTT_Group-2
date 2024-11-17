@@ -26,8 +26,6 @@ export class MainPageComponent {
   @ViewChild('videoInput') videoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('documentInput') documentInput!: ElementRef<HTMLInputElement>;
 
-  fullscreenImage: string | null = null;
-
   selectedUser: User | null = null;  // Use User type or null
   messageText: string = '';
 
@@ -135,7 +133,6 @@ export class MainPageComponent {
     const messageStr = typeof message === 'string' ? message : message.toString();
     return messageStr;
   }
-
 
   onClick(): void { }
 
