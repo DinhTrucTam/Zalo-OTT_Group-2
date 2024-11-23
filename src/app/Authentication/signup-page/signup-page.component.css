@@ -80,6 +80,7 @@ label {
 }
 
 input[type="tel"],
+input[type="email"],
 input[type="name"],
 input[type="password"],
 input[type="password_2"] {
@@ -92,6 +93,7 @@ input[type="password_2"] {
 }
 
 input[type="tel"]:focus,
+input[type="email"]:focus,
 input[type="name"]:focus,
 input[type="password"]:focus,
 input[type="password_2"]:focus {

@@ -14,6 +14,7 @@ export class SignupPageComponent implements OnInit {
   signupObj: any = {
     phoneNumber: '',
     name:'',
+    email:'',
     password: '',
     password_2: ''
   };
@@ -31,7 +32,7 @@ export class SignupPageComponent implements OnInit {
   onSignUp(signupForm: any) {
     if (signupForm.valid === false) {
       console.log("Form is invalid, please check fields.");
-      this.toastr.error('Tạo tài khoản thất bại. Số điện thoại hoặc tên không hợp lệ. Xin thử lại.', 'Error');
+      this.toastr.error('Tạo tài khoản thất bại. Vui lòng kiểm tra lại Số điện thoại, Email, hoặc Tên đại diện.', 'Error');
       return;
     }
     else {
@@ -57,6 +58,7 @@ export class SignupPageComponent implements OnInit {
         this.signupObj = {
           phoneNumber: '',
           name:'',
+          email:'',
           password: '',
           password_2: ''
         };
