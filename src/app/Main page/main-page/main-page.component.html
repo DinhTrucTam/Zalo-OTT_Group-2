@@ -5,7 +5,19 @@
         <div class="sidebar-top">
             <div class="profile-section">
                 <!-- User profile or other content goes here -->
-                <img src="assets/WIN_20230303_19_57_15_Pro.jpg" alt="Profile" class="profile-image">
+                <img src="assets/WIN_20230303_19_57_15_Pro.jpg" alt="Profile" class="profile-image"
+                    (click)="toggleMenu()">
+            </div>
+
+            <!-- Pop-up menu -->
+            <div class="profile-menu" *ngIf="isMenuVisible">
+                <p>Đinh Trực Tâm</p>
+                <ul>
+                    <li><a (click)="onClick()">Nâng cấp tài khoản</a></li>
+                    <li><a (click)="onClick()">Hồ sơ của bạn</a></li>
+                    <li><a (click)="onClick()">Cài đặt</a></li>
+                    <li><a (click)="onClick()">Đăng xuất</a></li>
+                </ul>
             </div>
             <div class="clickable" (click)="onClick()">
                 <div class="img-container">

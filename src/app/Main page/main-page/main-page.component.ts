@@ -22,6 +22,11 @@ interface Conversations {
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent {
+  isMenuVisible: boolean = false; // To track the visibility of the menu
+
+  toggleMenu() {
+    this.isMenuVisible = !this.isMenuVisible; // Toggle menu visibility
+  }
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoInput') videoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('documentInput') documentInput!: ElementRef<HTMLInputElement>;

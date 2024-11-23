@@ -25,6 +25,40 @@
     box-sizing: border-box;
 }
 
+/* Style for the profile menu */
+.profile-menu {
+    position: absolute;
+    top: 60px;
+    /* Adjust this value based on your design */
+    left: 80px;
+    /* Adjust position */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 200px;
+    /* Adjust width as needed */
+    z-index: 20;
+}
+
+.profile-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.profile-menu li {
+    padding: 10px 0;
+}
+
+.profile-menu li a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-menu li a:hover {
+    color: #007bff;
+}
+
 .profile-image {
     width: 48px;
     height: 48px;
