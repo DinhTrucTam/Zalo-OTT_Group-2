@@ -27,6 +27,15 @@ export class MainPageComponent {
   toggleMenu() {
     this.isMenuVisible = !this.isMenuVisible; // Toggle menu visibility
   }
+
+  // Define a variable to control the displayed content
+  activeView: string = 'conversations'; // Default view is conversations
+
+  // Function to set the active view
+  setActiveView(view: string): void {
+    this.activeView = view;
+  }
+
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
   @ViewChild('videoInput') videoInput!: ElementRef<HTMLInputElement>;
   @ViewChild('documentInput') documentInput!: ElementRef<HTMLInputElement>;
@@ -42,6 +51,8 @@ export class MainPageComponent {
     { id: 4, userName: 'Sarah Lee' }
   ];
 
+  contactBox = ["Danh sách bạn bè", "Danh sách nhóm"]
+
   filteredUsers: User[] = [...this.users1]; // Initialize filteredUsers to be the same as users initially
 
   // Sample conversations using the Conversations interface
@@ -53,7 +64,6 @@ export class MainPageComponent {
   };
 
   constructor(private sanitizer: DomSanitizer) { }
-
 
   // Function to select a user and display the conversation
   selectUser(user: User): void {

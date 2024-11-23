@@ -19,19 +19,14 @@
                     <li><a (click)="onClick()">Đăng xuất</a></li>
                 </ul>
             </div>
-            <div class="clickable" (click)="onClick()">
+            <div class="clickable" (click)="setActiveView('conversations')">
                 <div class="img-container">
                     <img src="assets/chatbubble.png" alt="chat-icon">
                 </div>
             </div>
-            <div class="clickable" (click)="onClick()">
+            <div class="clickable" (click)="setActiveView('contacts')">
                 <div class="img-container">
                     <img src="assets/contact-book.png" alt="chat-icon">
-                </div>
-            </div>
-            <div class="clickable" (click)="onClick()">
-                <div class="img-container">
-                    <img src="assets/checkbox.png" alt="chat-icon">
                 </div>
             </div>
         </div>
@@ -73,34 +68,51 @@
             </div>
         </div>
 
-        <mat-tab-group animationDuration="0ms" class="tabs">
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <span class="custom-tab-label">Tất cả</span>
-                </ng-template>
+        <!-- Display conversation list -->
+        <div *ngIf="activeView === 'conversations'">
 
-                <!-- Chat List (User Selection) -->
-                <ul class="chat-list">
-                    <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
-                        <div class="chat-info">
-                            <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
-                            <div>
-                                <p class="chat-name">{{ user.userName }}</p>
-                                <p class="last-message">Bạn:...</p>
+            <mat-tab-group animationDuration="0ms" class="tabs">
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span class="custom-tab-label">Tất cả</span>
+                    </ng-template>
+
+                    <!-- Chat List (User Selection) -->
+                    <ul class="chat-list">
+                        <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
+                            <div class="chat-info">
+                                <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                                <div>
+                                    <p class="chat-name">{{ user.userName }}</p>
+                                    <p class="last-message">Bạn:...</p>
+                                </div>
                             </div>
-                        </div>
-                        <span class="chat-time">19/10</span>
-                    </li>
-                </ul>
-            </mat-tab>
+                            <span class="chat-time">19/10</span>
+                        </li>
+                    </ul>
+                </mat-tab>
 
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <span class="custom-tab-label">Chưa đọc</span>
-                </ng-template>
-                Không có nội dung chưa đọc
-            </mat-tab>
-        </mat-tab-group>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span class="custom-tab-label">Chưa đọc</span>
+                    </ng-template>
+                    Không có nội dung chưa đọc
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+
+        <div *ngIf="activeView === 'contacts'">
+            <ul class="chat-list">
+                <li *ngFor="let content of contactBox" class="chat-item">
+                    <div class="chat-info">
+                        <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                        <div>
+                            <p class="chat-name">{{content}}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </section>
 
     <!-- Right Panel (Main Content) -->

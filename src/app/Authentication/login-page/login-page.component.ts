@@ -40,5 +40,4 @@ export class LoginPageComponent implements OnInit {
       this.toastr.error('Đăng nhập thất bại!', 'Error');
     }
   }
-
 }
