@@ -18,12 +18,13 @@
                     <li><a (click)="onClick()">Đăng xuất</a></li>
                 </ul>
             </div>
-            <div class="clickable" (click)="setActiveView('conversations')">
+
+            <div class="clickable" (click)="setActiveViewMiddlePane('conversations')">
                 <div class="img-container">
                     <img src="assets/chatbubble.png" alt="chat-icon">
                 </div>
             </div>
-            <div class="clickable" (click)="setActiveView('contacts')">
+            <div class="clickable" (click)="setActiveViewMiddlePane('contacts') ">
                 <div class="img-container">
                     <img src="assets/contact-book.png" alt="chat-icon">
                 </div>
@@ -68,7 +69,7 @@
         </div>
 
         <!-- Display conversation list -->
-        <div *ngIf="activeView === 'conversations'">
+        <div *ngIf="activeViewMiddlePane === 'conversations'">
 
             <mat-tab-group animationDuration="0ms" class="tabs">
                 <mat-tab>
@@ -100,14 +101,18 @@
             </mat-tab-group>
         </div>
 
-        <div *ngIf="activeView === 'contacts'">
+        <div *ngIf="activeViewMiddlePane === 'contacts'">
             <ul class="chat-list">
                 <li *ngFor="let content of contactBox" class="chat-item">
                     <div class="chat-info">
                         <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
                         <div>
-                            <p class="chat-name">{{content}}</p>
+                            <p class="chat-name"
+                                (click)="content === 'Danh sách bạn bè' ? setActiveViewRightPane('FriendsList') : setActiveViewRightPane('GroupsList')">
+                                {{content}}
+                            </p>
                         </div>
+
                     </div>
                 </li>
             </ul>
@@ -117,11 +122,19 @@
     <!-- Right Panel (Main Content) -->
     <main class="content">
         <!-- Default Message When No Conversation is Selected -->
-        <div *ngIf="!selectedUser" class="welcome-page">
+        <div *ngIf="!selectUser" class="welcome-page">
             <img src="assets/Logo_Zalo.png" alt="Welcome Image" class="welcome-image">
             <h2>Chào mừng đến với Zalo PC!</h2>
             <p>Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng<br>
                 người thân, bạn bè được tối ưu hóa cho máy tính của bạn.</p>
+        </div>
+
+        <div *ngIf="activeViewMiddlePane ==='contact' && activeViewRightPane === 'FriendsList'">
+            Friends
+        </div>
+
+        <div *ngIf="activeViewMiddlePane ==='contact' && activeViewRightPane === 'GroupsList'">
+            Groups
         </div>
 
         <!-- Conversation Box When a User is Selected -->

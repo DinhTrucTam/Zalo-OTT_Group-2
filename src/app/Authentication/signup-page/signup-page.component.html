@@ -6,14 +6,13 @@
         <p>Xin vui lòng cung cấp các thông tin sau:</p>
         <form #signupForm="ngForm">
             <label for="tel">Số điện thoại</label>
-            <input type="tel" id="tel" placeholder="Nhập số điện thoại của bạn (10 số)" [(ngModel)]="signupObj.phoneNumber"
-                name="phone" required pattern="^[0-9]{10}$"
+            <input type="tel" id="tel" placeholder="Nhập số điện thoại của bạn (10 số)"
+                [(ngModel)]="signupObj.phoneNumber" name="phone" required pattern="^[0-9]{10}$"
                 title="Vui lòng nhập số điện thoại hợp lệ (10 chữ số hoặc bao gồm mã quốc gia)" />
 
             <label for="Email">Email</label>
-            <input type="email" id="email" placeholder="Nhập địa chỉ email của bạn (abc@xyz.com)" [(ngModel)]="signupObj.email"
-                name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-
+            <input type="email" id="email" placeholder="Nhập địa chỉ email của bạn (abc@xyz.com)"
+                [(ngModel)]="signupObj.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required />
 
             <label for="name">Tên đại diện</label>
             <input type="name" id="name" placeholder="Nhập tên đại diện của bạn" [(ngModel)]="signupObj.name"

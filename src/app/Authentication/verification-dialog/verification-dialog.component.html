@@ -1,0 +1,8 @@
+<!-- verification-dialog.component.html -->
+<h2>Enter Verification Code</h2>
+<p>Please check your email and enter the code you received:</p>
+<input type="text" placeholder="Enter code" [(ngModel)]="verificationCode" class="verification-input" />
+<div class="dialog-actions">
+    <button (click)="verifyCode()">Submit</button>
+    <button (click)="closeDialog()">Cancel</button>
+</div>

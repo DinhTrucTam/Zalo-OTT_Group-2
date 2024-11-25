@@ -29,11 +29,17 @@ export class MainPageComponent {
   }
 
   // Define a variable to control the displayed content
-  activeView: string = 'conversations'; // Default view is conversations
+  activeViewMiddlePane: string = 'conversations'; // Default view is conversations
+  activeViewRightPane: string = ''; // 
 
   // Function to set the active view
-  setActiveView(view: string): void {
-    this.activeView = view;
+  setActiveViewMiddlePane(view: string): void {
+    this.activeViewMiddlePane = view;
+  }
+
+  // Function to set the active view
+  setActiveViewRightPane(view: string): void {
+    this.activeViewRightPane = view;
   }
 
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;

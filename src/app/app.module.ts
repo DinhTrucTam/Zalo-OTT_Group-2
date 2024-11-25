@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -20,6 +23,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { GoogleAuthorizationComponent } from './Authentication/google-authorization/google-authorization.component';
 import { MainPageComponent } from './Main page/main-page/main-page.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { VerificationDialogComponent } from './Authentication/verification-dialog/verification-dialog.component';
 
 
 @NgModule({
@@ -30,6 +34,7 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     GoogleAuthorizationComponent,
     MainPageComponent,
     SafeHtmlPipe,
+    VerificationDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +47,8 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     MatOptionModule,
     MatInputModule,
     MatFormFieldModule,
+    HttpClientModule,
+    MatDialogModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot({
       timeOut: 3000, // duration for which the toast will be displayed
