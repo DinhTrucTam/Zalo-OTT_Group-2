@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatOptionModule } from '@angular/material/core';
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -50,6 +51,7 @@ import { VerificationDialogComponent } from './Authentication/verification-dialo
     HttpClientModule,
     MatDialogModule,
     BrowserAnimationsModule, // required animations module
+    StoreModule.forRoot({}),
     ToastrModule.forRoot({
       timeOut: 3000, // duration for which the toast will be displayed
       positionClass: 'toast-top-right', // position of the toast on the screen
