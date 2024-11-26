@@ -363,7 +363,6 @@
 .chatting-part {
     display: flex;
     flex-direction: column;
-    /* flex-grow: 1; */
     padding: 15px;
     overflow-y: auto;
     background-color: #e0e0e0;
@@ -391,13 +390,15 @@
 }
 
 .message.you {
-    align-self: flex-start;
+    align-self: flex-end;
     background-color: #fff;
     border: 1px solid #005ae0;
     color: #081b3a;
     font-size: .9375rem;
     font-weight: 400;
     line-height: 1.5;
+    margin-left: auto;
+    margin-right: 0;
 }
 
 .message.sender {
@@ -408,6 +409,16 @@
     font-size: .9375rem;
     font-weight: 400;
     line-height: 1.5;
+}
+
+.message-content {
+    word-wrap: break-word;
+}
+
+.message-image {
+    max-width: 200px;
+    border-radius: 8px;
+    margin-top: 5px;
 }
 
 /* Feature Buttons */

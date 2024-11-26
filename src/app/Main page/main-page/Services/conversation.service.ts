@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,14 +11,21 @@ export class ConversationService {
   constructor(private http: HttpClient) {}
 
   fetchConversations(participantUserId: number): Observable<any> {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Cookie': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzMyNDYxMjUxLCJleHAiOjE3MzMwNjYwNTF9.S0cSC3ovtP9J4pdaJ9ThqhvR3uiNLnv_D_s2szovZ9WOESfGQh1g390yAM886JZii_ZYo0Sfo7HOHTNrYmdrLA'
-    };
+    const token = localStorage.getItem('accessToken'); // Retrieve token
 
-    const body = {
-      participantUserId: participantUserId
-    };
+    if (!token) {
+      console.error('No token found in Local Storage.');
+      return new Observable(observer => {
+        observer.error('No token');
+      });
+    }
+
+    const headers = new HttpHeaders({
+      'Cookie': token,
+      'Content-Type': 'application/json'
+    });
+
+    const body = { participantUserId };
 
     return this.http.post<any>(this.apiUrl, body, { headers });
   }

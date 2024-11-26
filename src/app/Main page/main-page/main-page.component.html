@@ -18,13 +18,12 @@
                     <li><a (click)="onClick()">Đăng xuất</a></li>
                 </ul>
             </div>
-
-            <div class="clickable" (click)="setActiveViewMiddlePane('conversations')">
+            <div class="clickable" (click)="setActiveView('conversations')">
                 <div class="img-container">
                     <img src="assets/chatbubble.png" alt="chat-icon">
                 </div>
             </div>
-            <div class="clickable" (click)="setActiveViewMiddlePane('contacts') ">
+            <div class="clickable" (click)="setActiveView('contacts')">
                 <div class="img-container">
                     <img src="assets/contact-book.png" alt="chat-icon">
                 </div>
@@ -69,7 +68,7 @@
         </div>
 
         <!-- Display conversation list -->
-        <div *ngIf="activeViewMiddlePane === 'conversations'">
+        <div *ngIf="activeView === 'conversations'">
 
             <mat-tab-group animationDuration="0ms" class="tabs">
                 <mat-tab>
@@ -78,7 +77,7 @@
                     </ng-template>
 
                     <!-- Chat List (User Selection) -->
-                    <ul class="chat-list">
+                    <!-- <ul class="chat-list">
                         <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
                             <div class="chat-info">
                                 <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
@@ -88,6 +87,33 @@
                                 </div>
                             </div>
                             <span class="chat-time">19/10</span>
+                        </li>
+                    </ul> -->
+                    <ul class="chat-list">
+                        <li *ngFor="let conversation of conversationsList" class="chat-item"
+                            (click)="selectUser({ id: conversation.id, userName: getParticipantNames(conversation) })">
+
+                            <div class="chat-info">
+                                <!-- Avatar placeholder (you can replace this with actual participant images if available) -->
+                                <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+
+                                <div>
+                                    <!-- Dynamically display participant names for each conversation -->
+                                    <p class="chat-name">
+                                        {{ getParticipantNames(conversation) }}
+                                    </p>
+
+                                    <!-- Placeholder for last message -->
+                                    <p class="last-message">
+                                        Bạn: {{ conversation.lastMessage?.content || '...' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Display formatted last message time -->
+                            <span class="chat-time">
+                                {{ conversation.lastMessageTime | date: 'dd/MM' }}
+                            </span>
                         </li>
                     </ul>
                 </mat-tab>
@@ -101,18 +127,14 @@
             </mat-tab-group>
         </div>
 
-        <div *ngIf="activeViewMiddlePane === 'contacts'">
+        <div *ngIf="activeView === 'contacts'">
             <ul class="chat-list">
                 <li *ngFor="let content of contactBox" class="chat-item">
                     <div class="chat-info">
                         <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
                         <div>
-                            <p class="chat-name"
-                                (click)="content === 'Danh sách bạn bè' ? setActiveViewRightPane('FriendsList') : setActiveViewRightPane('GroupsList')">
-                                {{content}}
-                            </p>
+                            <p class="chat-name">{{content}}</p>
                         </div>
-
                     </div>
                 </li>
             </ul>
@@ -122,19 +144,11 @@
     <!-- Right Panel (Main Content) -->
     <main class="content">
         <!-- Default Message When No Conversation is Selected -->
-        <div *ngIf="!selectUser" class="welcome-page">
+        <div *ngIf="!selectedUser" class="welcome-page">
             <img src="assets/Logo_Zalo.png" alt="Welcome Image" class="welcome-image">
             <h2>Chào mừng đến với Zalo PC!</h2>
             <p>Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng<br>
                 người thân, bạn bè được tối ưu hóa cho máy tính của bạn.</p>
-        </div>
-
-        <div *ngIf="activeViewMiddlePane ==='contact' && activeViewRightPane === 'FriendsList'">
-            Friends
-        </div>
-
-        <div *ngIf="activeViewMiddlePane ==='contact' && activeViewRightPane === 'GroupsList'">
-            Groups
         </div>
 
         <!-- Conversation Box When a User is Selected -->
@@ -158,17 +172,43 @@
             </div>
 
             <!-- Conversation Messages -->
-            <div class="chatting-part">
+            <!-- <div class="chatting-part">
                 <div *ngFor="let message of getSelectedUserConversation()"
                     [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
-
-                    <!-- Safely display the message content (whether text or HTML) -->
                     <div *ngIf="message.message" [innerHTML]="message.message"></div>
-
-                    <!-- Optional: If you're showing an image, you can do it like this -->
                     <ng-container *ngIf="isImage(message.message)">
                         <img [src]="getImageSrc(message.message)" alt="Image Message">
                     </ng-container>
+                </div>
+            </div> -->
+
+            <!-- Conversation Messages -->
+            <!-- <div class="chatting-part">
+                <div *ngIf="selectedUser">
+                    <div *ngFor="let message of getConversationMessages()"
+                        [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
+
+                        <div class="message-content" [innerHTML]="message.content"></div>
+
+                        <ng-container *ngIf="isImage(message.content)">
+                            <img [src]="getImageSrc(message.content)" alt="Image Message" class="message-image">
+                        </ng-container>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Conversation Messages -->
+            <div class="chatting-part">
+                <div *ngIf="selectedUser">
+                    <div *ngFor="let message of getConversationMessages()"
+                        [ngClass]="{'message': true, 'you': message.sender === 1, 'sender': message.sender !== currentUserId}">
+            
+                        <div class="message-content" [innerHTML]="message.content"></div>
+            
+                        <ng-container *ngIf="isImage(message.content)">
+                            <img [src]="getImageSrc(message.content)" alt="Image Message" class="message-image">
+                        </ng-container>
+                    </div>
                 </div>
             </div>
 
@@ -179,20 +219,20 @@
                 <button class="feature-btn" title="Send Image" (click)="triggerFileInput('image')">
                     <img src="assets/image.png" alt="Send Image">
                 </button>
-                <input type="file" #imageInput accept="image/*" (change)="handleFileInput($event, 'image')" hidden>
+                <!-- <input type="file" #imageInput accept="image/*" (change)="handleFileInput($event, 'image')" hidden> -->
 
                 <!-- Video Upload -->
                 <button class="feature-btn" title="Send Video" (click)="triggerFileInput('video')">
                     <img src="assets/video.png" alt="Send Video">
                 </button>
-                <input type="file" #videoInput accept="video/*" (change)="handleFileInput($event, 'video')" hidden>
+                <!-- <input type="file" #videoInput accept="video/*" (change)="handleFileInput($event, 'video')" hidden> -->
 
                 <!-- Document Upload -->
                 <button class="feature-btn" title="Send File" (click)="triggerFileInput('document')">
                     <img src="assets/attach.png" alt="Send File">
                 </button>
-                <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt"
-                    (change)="handleFileInput($event, 'document')" hidden>
+                <!-- <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt"
+                    (change)="handleFileInput($event, 'document')" hidden> -->
             </div>
 
             <!-- Typing Input -->
