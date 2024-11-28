@@ -5,13 +5,12 @@
         <div class="sidebar-top">
             <div class="profile-section">
                 <!-- User profile or other content goes here -->
-                <img src="assets/WIN_20230303_19_57_15_Pro.jpg" alt="Profile" class="profile-image"
-                    (click)="toggleMenu()">
+                <img src="currentUserPhoto" alt="Profile" class="profile-image" (click)="toggleMenu()">
             </div>
 
             <!-- Pop-up menu -->
             <div class="profile-menu" *ngIf="isMenuVisible">
-                <p>Đinh Trực Tâm</p>
+                <p>{{ currentUserName }}</p>
                 <ul>
                     <li><a (click)="onClick()">Hồ sơ của bạn</a></li>
                     <li><a (click)="onClick()">Nhật ký hoạt động</a></li>
@@ -52,20 +51,22 @@
 
     <!-- Middle Panel (Chat List) -->
     <section class="chat-list-panel">
+
         <div id="contact-search-grid" class="grid-setting" style="grid-template-columns: auto 32px 32px;">
             <div class="group-search-item">
                 <img src="assets/search.png" alt="search-icon" class="search-container click">
-                <input type="text" placeholder="Tìm kiếm" class="search-bar-input" [matAutocomplete]="users"
-                    (input)="filterUsers($event)">
-
-                <!-- Autocomplete dropdown with dynamic options -->
-                <mat-autocomplete #users="matAutocomplete">
-                    <mat-option *ngFor="let user of filteredUsers" [value]="user">
-                        {{ user.userName }}
+                <input type="text" placeholder="Tìm số điện thoại hoặc tên" class="search-bar-input"
+                    [(ngModel)]="searchInput" (keyup.enter)="onSearch()" minlength="1" pattern="\d*"
+                    [matAutocomplete]="users">
+                <mat-autocomplete #users="matAutocomplete" (optionSelected)="onUserSelected($event.option.value)">
+                    <mat-option *ngFor="let user of searchResults" [value]="user">
+                        {{ user.participantName }}
                     </mat-option>
                 </mat-autocomplete>
             </div>
         </div>
+
+
 
         <!-- Display conversation list -->
         <div *ngIf="activeView === 'conversations'">
@@ -73,43 +74,26 @@
             <mat-tab-group animationDuration="0ms" class="tabs">
                 <mat-tab>
                     <ng-template mat-tab-label>
-                        <span class="custom-tab-label">Tất cả</span>
+                        <span class="custom-tab-label" (click)="resetView()">Tất cả</span>
                     </ng-template>
 
-                    <!-- Chat List (User Selection) -->
-                    <!-- <ul class="chat-list">
-                        <li *ngFor="let user of users1" class="chat-item" (click)="selectUser(user)">
-                            <div class="chat-info">
-                                <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
-                                <div>
-                                    <p class="chat-name">{{ user.userName }}</p>
-                                    <p class="last-message">Bạn:...</p>
-                                </div>
-                            </div>
-                            <span class="chat-time">19/10</span>
-                        </li>
-                    </ul> -->
                     <ul class="chat-list">
                         <li *ngFor="let conversation of conversationsList" class="chat-item"
                             (click)="selectUser({ id: conversation.id, userName: getParticipantNames(conversation) })">
-
                             <div class="chat-info">
                                 <!-- Avatar placeholder (you can replace this with actual participant images if available) -->
                                 <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
-
                                 <div>
                                     <!-- Dynamically display participant names for each conversation -->
                                     <p class="chat-name">
                                         {{ getParticipantNames(conversation) }}
                                     </p>
-
                                     <!-- Placeholder for last message -->
                                     <p class="last-message">
                                         Bạn: {{ conversation.lastMessage?.content || '...' }}
                                     </p>
                                 </div>
                             </div>
-
                             <!-- Display formatted last message time -->
                             <span class="chat-time">
                                 {{ conversation.lastMessageTime | date: 'dd/MM' }}
@@ -172,39 +156,13 @@
             </div>
 
             <!-- Conversation Messages -->
-            <!-- <div class="chatting-part">
-                <div *ngFor="let message of getSelectedUserConversation()"
-                    [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
-                    <div *ngIf="message.message" [innerHTML]="message.message"></div>
-                    <ng-container *ngIf="isImage(message.message)">
-                        <img [src]="getImageSrc(message.message)" alt="Image Message">
-                    </ng-container>
-                </div>
-            </div> -->
-
-            <!-- Conversation Messages -->
-            <!-- <div class="chatting-part">
-                <div *ngIf="selectedUser">
-                    <div *ngFor="let message of getConversationMessages()"
-                        [ngClass]="{'message': true, 'sender': message.sender === 'You', 'you': message.sender !== 'You'}">
-
-                        <div class="message-content" [innerHTML]="message.content"></div>
-
-                        <ng-container *ngIf="isImage(message.content)">
-                            <img [src]="getImageSrc(message.content)" alt="Image Message" class="message-image">
-                        </ng-container>
-                    </div>
-                </div>
-            </div> -->
-
-            <!-- Conversation Messages -->
             <div class="chatting-part">
                 <div *ngIf="selectedUser">
                     <div *ngFor="let message of getConversationMessages()"
-                        [ngClass]="{'message': true, 'you': message.sender === 1, 'sender': message.sender !== currentUserId}">
-            
+                        [ngClass]="{'message': true, 'you': message.sender === currentUserId, 'sender': message.sender !== currentUserId}">
+
                         <div class="message-content" [innerHTML]="message.content"></div>
-            
+
                         <ng-container *ngIf="isImage(message.content)">
                             <img [src]="getImageSrc(message.content)" alt="Image Message" class="message-image">
                         </ng-container>
@@ -212,7 +170,6 @@
                 </div>
             </div>
 
-            <!-- Chat Input Features -->
             <!-- Chat Input Features -->
             <div class="features-part">
                 <!-- Image Upload -->
