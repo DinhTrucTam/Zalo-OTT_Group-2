@@ -22,7 +22,9 @@ export class LoginPageComponent implements OnInit {
     private http: HttpClient
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    localStorage.clear();
+  }
 
   onLogin() {
     if (!this.loginObj.phoneNumber || !this.loginObj.password) {

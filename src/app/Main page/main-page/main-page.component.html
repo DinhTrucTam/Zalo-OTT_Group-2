@@ -4,17 +4,26 @@
         <!-- Top Section -->
         <div class="sidebar-top">
             <div class="profile-section">
-                <!-- User profile or other content goes here -->
-                <img src="currentUserPhoto" alt="Profile" class="profile-image" (click)="toggleMenu()">
+                <!-- Display current user profile picture -->
+                <img src="{{ currentUserPhoto }}" alt="Profile" class="profile-image" (click)="toggleMenu()">
+
+                <!-- File input to select an avatar -->
+                <!-- <input type="file" accept="image/*" id="avatarUpload" (change)="handleAvatarUpdate($event)" hidden />
+                <label for="avatarUpload" class="upload-avatar-btn">Update Avatar</label> -->
             </div>
+
 
             <!-- Pop-up menu -->
             <div class="profile-menu" *ngIf="isMenuVisible">
                 <p>{{ currentUserName }}</p>
                 <ul>
                     <li><a (click)="onClick()">Hồ sơ của bạn</a></li>
-                    <li><a (click)="onClick()">Nhật ký hoạt động</a></li>
-                    <li><a (click)="onClick()">Đăng xuất</a></li>
+                    <li>
+                        <a (click)="triggerFileInput('image')">Cập nhật hình đại diện</a>
+                        <input type="file" #imageInput accept="image/*" id="avatarUpload"
+                            (change)="handleAvatarUpdate($event)" hidden>
+                    </li>
+                    <li><a (click)="logOut()">Đăng xuất</a></li>
                 </ul>
             </div>
             <div class="clickable" (click)="setActiveView('conversations')">
@@ -51,7 +60,6 @@
 
     <!-- Middle Panel (Chat List) -->
     <section class="chat-list-panel">
-
         <div id="contact-search-grid" class="grid-setting" style="grid-template-columns: auto 32px 32px;">
             <div class="group-search-item">
                 <img src="assets/search.png" alt="search-icon" class="search-container click">
@@ -66,17 +74,13 @@
             </div>
         </div>
 
-
-
         <!-- Display conversation list -->
         <div *ngIf="activeView === 'conversations'">
-
             <mat-tab-group animationDuration="0ms" class="tabs">
                 <mat-tab>
                     <ng-template mat-tab-label>
                         <span class="custom-tab-label" (click)="resetView()">Tất cả</span>
                     </ng-template>
-
                     <ul class="chat-list">
                         <li *ngFor="let conversation of conversationsList" class="chat-item"
                             (click)="selectUser({ id: conversation.id, userName: getParticipantNames(conversation) })">
@@ -104,10 +108,44 @@
 
                 <mat-tab>
                     <ng-template mat-tab-label>
-                        <span class="custom-tab-label">Chưa đọc</span>
+                        <span class="custom-tab-label">Tạo nhóm</span>
                     </ng-template>
-                    Không có nội dung chưa đọc
+
+                    <div class="create-group">
+                        <h4>Chọn thành viên nhóm</h4>
+
+                        <!-- Display the list of contacts -->
+                        <ul class="contact-list">
+                            <div *ngFor="let contact of contacts" class="contact-item">
+                                <!-- Checkbox for selecting the contact -->
+                                <input type="checkbox" [checked]="isMemberSelected(contact)"
+                                    (change)="toggleMemberSelection(contact)" class="contact-checkbox" />
+
+                                <!-- Contact details -->
+                                <span>{{ contact.participantName }}</span>
+                            </div>
+                        </ul>
+
+                        <!-- Display selected members -->
+                        <div class="selected-members">
+                            <h4>Thành viên đã chọn:</h4>
+                            <ul>
+                                <li *ngFor="let member of selectedMembers" class="selected-member">
+                                    {{ member.participantName }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Create Group Button -->
+                        <div class="button-create">
+                            <button (click)="createGroup()" class="create-group-btn"
+                                [disabled]="selectedMembers.length === 0">
+                                Tạo nhóm
+                            </button>
+                        </div>
+                    </div>
                 </mat-tab>
+
             </mat-tab-group>
         </div>
 
@@ -143,11 +181,11 @@
                     <span class="header-username">{{ selectedUser.userName }}</span>
                 </div>
                 <div class="conversation-header-right">
-                    <button class="header-btn" title="Add User">
-                        <img src="assets/people.png" alt="Add User">
+                    <button class="header-btn" title="Thêm thành viên">
+                        <img src="assets/people (1).png" alt="Add Members">
                     </button>
-                    <button class="header-btn" title="Search in Conversation">
-                        <img src="assets/search.png" alt="Search">
+                    <button class="header-btn" title="Xóa thành viên">
+                        <img src="assets/people (2).png" alt="Remove Main">
                     </button>
                     <button class="header-btn" title="Video Call">
                         <img src="assets/camera.png" alt="Video Call">
@@ -155,43 +193,66 @@
                 </div>
             </div>
 
-            <!-- Conversation Messages -->
+
             <div class="chatting-part">
                 <div *ngIf="selectedUser">
                     <div *ngFor="let message of getConversationMessages()"
                         [ngClass]="{'message': true, 'you': message.sender === currentUserId, 'sender': message.sender !== currentUserId}">
 
-                        <div class="message-content" [innerHTML]="message.content"></div>
-
-                        <ng-container *ngIf="isImage(message.content)">
+                        <!-- Check if the content is an image -->
+                        <ng-container *ngIf="isImage(message.content); else notImage">
                             <img [src]="getImageSrc(message.content)" alt="Image Message" class="message-image">
                         </ng-container>
+
+                        <!-- Fallback for non-image content -->
+                        <ng-template #notImage>
+                            <!-- Check if the content is a video -->
+                            <ng-container *ngIf="isVideo(message.content); else textContent">
+                                <video [src]="getVideoSrc(message.content)" controls class="message-video"></video>
+                            </ng-container>
+
+                            <!-- Fallback for text or unsupported content -->
+                            <ng-template #textContent>
+                                <ng-container *ngIf="isValidUrl(message.content); else plainText">
+                                    <a [href]="message.content" target="_blank" rel="noopener noreferrer"
+                                        class="message-link">
+                                        {{ message.content }}
+                                    </a>
+                                </ng-container>
+
+                                <ng-template #plainText>
+                                    <div class="message-content">{{ message.content }}</div>
+                                </ng-template>
+                            </ng-template>
+                        </ng-template>
                     </div>
                 </div>
             </div>
 
+
+
             <!-- Chat Input Features -->
             <div class="features-part">
                 <!-- Image Upload -->
-                <button class="feature-btn" title="Send Image" (click)="triggerFileInput('image')">
+                <button class="feature-btn" title="Gửi hình ảnh" (click)="triggerFileInput('image')">
                     <img src="assets/image.png" alt="Send Image">
                 </button>
-                <!-- <input type="file" #imageInput accept="image/*" (change)="handleFileInput($event, 'image')" hidden> -->
+                <input type="file" #imageInput accept="image/*" (change)="handleFileInput($event, 'image')" hidden>
 
                 <!-- Video Upload -->
-                <button class="feature-btn" title="Send Video" (click)="triggerFileInput('video')">
+                <button class="feature-btn" title="Gửi video" (click)="triggerFileInput('video')">
                     <img src="assets/video.png" alt="Send Video">
                 </button>
-                <!-- <input type="file" #videoInput accept="video/*" (change)="handleFileInput($event, 'video')" hidden> -->
+                <input type="file" #videoInput accept=".mkv,.gif,.gifv,.mov,.qt,.wmv,.mp4,.m4v,.zip,.rar"
+                    (change)="handleFileInput($event, 'video')" hidden>
 
                 <!-- Document Upload -->
-                <button class="feature-btn" title="Send File" (click)="triggerFileInput('document')">
+                <button class="feature-btn" title="Gửi các tệp đính kèm" (click)="triggerFileInput('document')">
                     <img src="assets/attach.png" alt="Send File">
                 </button>
-                <!-- <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt"
-                    (change)="handleFileInput($event, 'document')" hidden> -->
+                <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
+                    (change)="handleFileInput($event, 'document')" hidden>
             </div>
-
             <!-- Typing Input -->
             <div class="typing-part">
                 <input type="text" placeholder="Nhập tin nhắn ở đây..." class="message-input" [(ngModel)]="messageText"

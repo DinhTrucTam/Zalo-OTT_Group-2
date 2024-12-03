@@ -110,7 +110,6 @@ button {
     cursor: pointer;
     transition: background-color 0.3s;
     width: auto;
-    /* Ensures button only fits content */
 }
 
 button:hover {

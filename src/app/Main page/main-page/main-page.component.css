@@ -25,6 +25,18 @@
     box-sizing: border-box;
 }
 
+.upload-avatar-btn {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.upload-avatar-btn:hover {
+    text-decoration: none;
+}
+
 /* Style for the profile menu */
 .profile-menu {
     position: absolute;
@@ -275,6 +287,61 @@
     color: #999;
 }
 
+.contact-checkbox {
+    margin-right: 10px;
+    transform: scale(1.5);
+    cursor: pointer;
+    /* Optional: Increase checkbox size */
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.contact-item.selected {
+    background-color: #d0f0c0;
+    /* Light green to show selection */
+    font-weight: bold;
+}
+
+.selected-member{
+    font-weight: bolder;
+    color: #005ae0;
+}
+
+.button-create {
+    display: grid;
+    place-items: center;
+    /* Centers both horizontally and vertically */
+    height: 100%;
+}
+
+.create-group-btn {
+    text-align: center;
+    background-color: #407bff;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto;
+}
+
+.create-group-btn:hover {
+    background-color: #356acf;
+}
+
 /* Right Panel (Main Content) */
 .content {
     flex-grow: 1;
@@ -356,8 +423,8 @@
 }
 
 .header-btn img {
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
 }
 
 .chatting-part {
@@ -416,9 +483,16 @@
 }
 
 .message-image {
-    max-width: 200px;
+    max-height: 250px;
+    width: auto;
+    height: auto;
+    display: block;
     border-radius: 8px;
-    margin-top: 5px;
+}
+
+.message-video {
+    max-height: 12.5rem;
+    border-radius: 8px;
 }
 
 /* Feature Buttons */
@@ -446,8 +520,8 @@
 }
 
 .feature-btn img {
-    width: 18px;
-    height: 18px;
+    width: 25px;
+    height: 25px;
 }
 
 .typing-part {
