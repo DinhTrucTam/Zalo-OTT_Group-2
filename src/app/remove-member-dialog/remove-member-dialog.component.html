@@ -1,0 +1,14 @@
+<h2>Chọn thành viên để xóa</h2>
+<ul class="participant-list">
+    <div *ngFor="let participant of data.participants">
+        <input type="radio" [value]="participant.userId" name="selectedParticipant"
+            (change)="selectParticipant(participant.userId)" />
+        {{ participant.participantName }}
+    </div>
+</ul>
+<div class="dialog-actions">
+    <button mat-button (click)="closeDialog()">Hủy</button>
+    <button mat-button color="primary" [disabled]="!selectedParticipantId" (click)="confirmSelection()">
+        Xóa
+    </button>
+</div>

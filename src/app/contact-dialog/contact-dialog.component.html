@@ -1,0 +1,8 @@
+<h2>Chọn thành viên để thêm</h2>
+<ul class="contact-list">
+    <div *ngFor="let contact of data.contacts" (click)="selectContact(contact)" class="contact-item">
+        <input type="checkbox" />
+        <span>{{ contact.participantName }}</span>
+    </div>
+</ul>
+<button mat-button (click)="closeDialog()">Hủy</button>

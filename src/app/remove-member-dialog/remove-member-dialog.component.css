@@ -1,0 +1,95 @@
+/* General Styling */
+h2 {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Participant List Styling */
+.participant-list {
+    list-style-type: none;
+    padding: 0;
+    max-height: 300px;
+    /* Limit the height to create a scrollable list if needed */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.participant-list div {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #eee;
+}
+
+.participant-list div:last-child {
+    border-bottom: none;
+    /* Remove the border for the last item */
+}
+
+.participant-list div:hover {
+    background-color: #f5f5f5;
+}
+
+.participant-list input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #2196f3;
+    /* Beautiful blue for the radio button */
+}
+
+.participant-list span {
+    font-size: 1em;
+    color: #555;
+}
+
+/* Dialog Actions Styling */
+.dialog-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Button Styling */
+button[mat-button] {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button[mat-button]:first-child {
+    background-color: #f44336;
+    /* Red for cancel button */
+}
+
+button[mat-button]:first-child:hover {
+    background-color: #d32f2f;
+    /* Slightly darker red on hover */
+}
+
+button[mat-button]:last-child {
+    background-color: #4caf50;
+    /* Green for confirm button */
+}
+
+button[mat-button]:last-child:hover {
+    background-color: #388e3c;
+    /* Slightly darker green on hover */
+}
+
+button[mat-button][disabled] {
+    background-color: #e0e0e0;
+    color: #9e9e9e;
+    cursor: not-allowed;
+}

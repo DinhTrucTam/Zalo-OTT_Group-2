@@ -83,7 +83,7 @@
                     </ng-template>
                     <ul class="chat-list">
                         <li *ngFor="let conversation of conversationsList" class="chat-item"
-                            (click)="selectUser({ id: conversation.id, userName: getParticipantNames(conversation) })">
+                            (click)="selectConversation(conversation)">
                             <div class="chat-info">
                                 <!-- Avatar placeholder (you can replace this with actual participant images if available) -->
                                 <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
@@ -175,16 +175,17 @@
 
         <!-- Conversation Box When a User is Selected -->
         <div *ngIf="selectedUser">
+            <!-- Header part -->
             <div class="conversation-header">
                 <div class="conversation-header-left">
                     <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
                     <span class="header-username">{{ selectedUser.userName }}</span>
                 </div>
                 <div class="conversation-header-right">
-                    <button class="header-btn" title="Thêm thành viên">
+                    <button class="header-btn" title="Thêm thành viên" (click)="openContactDialog()">
                         <img src="assets/people (1).png" alt="Add Members">
                     </button>
-                    <button class="header-btn" title="Xóa thành viên">
+                    <button class="header-btn" title="Xóa thành viên" (click)="openRemoveMemberDialog()">
                         <img src="assets/people (2).png" alt="Remove Main">
                     </button>
                     <button class="header-btn" title="Video Call">
@@ -193,7 +194,7 @@
                 </div>
             </div>
 
-
+            <!-- Chatting part -->
             <div class="chatting-part">
                 <div *ngIf="selectedUser">
                     <div *ngFor="let message of getConversationMessages()"
@@ -229,8 +230,6 @@
                 </div>
             </div>
 
-
-
             <!-- Chat Input Features -->
             <div class="features-part">
                 <!-- Image Upload -->
@@ -253,6 +252,7 @@
                 <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
                     (change)="handleFileInput($event, 'document')" hidden>
             </div>
+
             <!-- Typing Input -->
             <div class="typing-part">
                 <input type="text" placeholder="Nhập tin nhắn ở đây..." class="message-input" [(ngModel)]="messageText"

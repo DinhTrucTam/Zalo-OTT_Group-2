@@ -26,6 +26,8 @@ import { GoogleAuthorizationComponent } from './Authentication/google-authorizat
 import { MainPageComponent } from './Main page/main-page/main-page.component';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { VerificationDialogComponent } from './Authentication/verification-dialog/verification-dialog.component';
+import { ContactDialogComponent } from './contact-dialog/contact-dialog.component';
+import { RemoveMemberDialogComponent } from './remove-member-dialog/remove-member-dialog.component';
 
 
 @NgModule({
@@ -37,6 +39,8 @@ import { VerificationDialogComponent } from './Authentication/verification-dialo
     MainPageComponent,
     SafeHtmlPipe,
     VerificationDialogComponent,
+    ContactDialogComponent,
+    RemoveMemberDialogComponent,
   ],
   imports: [
     BrowserModule,

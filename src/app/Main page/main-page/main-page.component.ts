@@ -1,5 +1,4 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConversationService } from './Services/conversation.service';
 import { SearchingService } from './Services/searching.service';
@@ -9,6 +8,12 @@ import { ToastrService } from 'ngx-toastr';
 import { FileUploadService } from './Services/sendingvideo_image_doc.service';
 import { AvatarService } from './Services/avatar.service';
 import { GroupCreationService } from './Services/groupcreation.service';
+import { AddMemberService } from './Services/addmember.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ContactDialogComponent } from '../../contact-dialog/contact-dialog.component';
+import { RemoveMemberService } from './Services/removemember.service';
+import { RemoveMemberDialogComponent } from '../../remove-member-dialog/remove-member-dialog.component';
+
 
 // Define User and Conversation interfaces
 interface User {
@@ -44,7 +49,10 @@ export class MainPageComponent implements OnInit {
     private toastr: ToastrService,
     private fileUploadService: FileUploadService,
     private avatarService: AvatarService,
-    private groupCreationService: GroupCreationService) { }
+    private groupCreationService: GroupCreationService,
+    private dialog: MatDialog,
+    private addMemberService: AddMemberService,
+    private removeMemberService: RemoveMemberService) { }
 
   //parameters//
   isMenuVisible: boolean = false; // To track the visibility of the menu
@@ -63,6 +71,7 @@ export class MainPageComponent implements OnInit {
   filteredUsers: User[] = [...this.users1]; // Initialize filteredUsers to be the same as users initially
   contacts: any[] = []; // List of all contacts
   selectedMembers: any[] = []; // Selected members for the group
+  currentConversationId: any;
 
   //this function is called whenever the main page is reloaded/accessed
   ngOnInit(): void {
@@ -145,7 +154,6 @@ export class MainPageComponent implements OnInit {
         // Extract unique contacts from the conversations
         this.extractContacts();
 
-
         // Find the current user's data from the conversations
         this.setCurrentUserInfo();
       },
@@ -195,7 +203,6 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  //Retrieve contacts by searching name
   // Retrieve contacts by searching name in private chats
   searchContactByName(searchTerm: string): void {
     // Filter conversations where privateChat is true
@@ -303,6 +310,24 @@ export class MainPageComponent implements OnInit {
     return this.selectedUser ? this.conversations[this.selectedUser.id] : [];
   }
 
+  selectConversation(conversation: any): void {
+    if (!conversation) return;
+
+    const conversationId = conversation.id; // Get the conversationId
+    console.log('Selected Conversation ID:', conversationId);
+
+    // Optionally, you can also set the selected user or conversation for further use
+    this.selectedUser = {
+      id: conversationId,
+      userName: this.getParticipantNames(conversation),
+    };
+
+    // If you want to store the current conversation ID for other purposes
+    this.activeView = 'conversations'; // Switch to conversations view if needed
+    this.currentConversationId = conversationId;
+  }
+
+
 
   // Handling images/video/docs
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;
@@ -329,138 +354,6 @@ export class MainPageComponent implements OnInit {
       user1.userName.toLowerCase().includes(searchTerm)
     );
   }
-
-  //handleFileInput(event: Event, type: string): void {
-  //   const input = event.target as HTMLInputElement;
-  //   const file = input?.files?.[0];
-  //   if (!this.selectedUser) {
-  //     console.error('No user is selected');
-  //     return;
-  //   }
-  //   const selectedUser = this.selectedUser; // Narrow the type
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       const fileContent = reader.result;
-  //       let messageContent: SafeHtml | string = '';
-  //       if (type === 'image') {
-  //         messageContent = this.sanitizer.bypassSecurityTrustHtml(
-  //           <img src="${fileContent}" alt = "Image" style = "max-width: 200px; cursor: pointer;"(click) = "openFullscreen('${fileContent}')" >
-  //         );
-  //       } else if (type === 'video') {
-  //         messageContent = this.sanitizer.bypassSecurityTrustHtml(
-  //           `<video controls style="max-width: 200px;">
-  //           <source src="${fileContent}" type="${file.type}">
-  //           Your browser does not support the video tag.
-  //         </video>`
-  //         );
-  //       } else if (type === 'document') {
-  //         messageContent = this.sanitizer.bypassSecurityTrustHtml(
-  //           <a href="${fileContent}" download = "${file.name}" > Download ${ file.name } < /a>
-  //         );
-  //       }
-  //       this.conversations[selectedUser.id].push({
-  //         sender: 'You',
-  //         message: messageContent
-  //       });
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  //   input.value = ''; // Clear the input field
-  //}
-  // Function to handle file input
-  // handleFileInput(event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   if (!input.files || input.files.length === 0) {
-  //     console.error('No file selected');
-  //     return;
-  //   }
-
-  //   const file = input.files[0];
-  //   const fileType = file.type.startsWith('image/') ? 'IMAGE' : 'UNKNOWN';
-  //   const fileExtension = file.name.split('.').pop() || 'unknown';
-
-  //   // Call the upload service
-  //   this.fileUploadService.uploadFile(file, fileType, fileExtension).subscribe({
-  //     next: (response: any) => {
-  //       console.log('Upload response:', response);
-  //       alert(`File uploaded successfully: ${response.link}`);
-
-
-  //       const newMessage = {
-  //         content: response.link,
-  //         contentType: 'IMAGE',
-  //         conversationId: this.selectedUser.id,
-  //         senderId: this.currentUserId,
-  //       };
-
-  //       try {
-  //         this.socket$.next(newMessage); // Send the message
-  //         console.log('Message sent:', newMessage);
-
-  //         // Clear input field
-  //         this.messageText = '';
-  //       } catch (err) {
-  //         console.error('Error sending message:', err);
-  //         //this.setupWebSocket(); // Attempt to reconnect
-  //       }
-
-  //     },
-  //     error: (err) => {
-  //       console.error('Upload failed:', err);
-  //       alert('Failed to upload file. Please try again.');
-  //     }
-  //   });
-
-  //   // Reset the file input
-  //   input.value = '';
-  // }
-
-  // handleFileInput(event: Event, inputType: any): void {
-  //   const input = event.target as HTMLInputElement;
-  //   if (!input.files || input.files.length === 0) {
-  //     console.error('No file selected');
-  //     return;
-  //   }
-  //   const file = input.files[0];
-  //   const fileType = file.type.startsWith('image/') ? 'IMAGE' : 'UNKNOWN';
-  //   const fileExtension = file.name.split('.').pop() || 'unknown';
-  //   console.log(fileExtension);
-  //   // Ensure a user is selected
-  //   if (!this.selectedUser) {
-  //     alert('No user selected. Please select a user to send the image.');
-  //     return;
-  //   }
-  //   // Call the upload service
-  //   this.fileUploadService.uploadFile(file, fileType, fileExtension).subscribe({
-  //     next: (response: any) => {
-  //       console.log('Upload response:', response);
-  //       alert(`File uploaded successfully: ${response.link}`);
-
-  //       // send image URL via websocket
-  //       const newMessage = {
-  //         content: response.link,
-  //         contentType: 'IMAGE',
-  //         conversationId: this.selectedUser!.id, // Non-null assertion because we've checked earlier
-  //         senderId: this.currentUserId,
-  //       };
-
-  //       try {
-  //         this.socket$.next(newMessage); // Send the message
-  //         console.log('Message sent:', newMessage);
-  //       } catch (err) {
-  //         console.error('Error sending message:', err);
-  //       }
-  //     },
-  //     error: (err) => {
-  //       console.error('Upload failed:', err);
-  //       alert('Failed to upload file. Please try again.');
-  //     }
-  //   });
-
-  //   // Reset the file input
-  //   input.value = '';
-  // }
 
   // Handle file input changes
   handleFileInput(event: Event, inputType: string): void {
@@ -700,5 +593,107 @@ export class MainPageComponent implements OnInit {
       }
     );
     this.fetchConversations();
+  }
+
+  // Open the dialog to select a contact
+  openContactDialog(): void {
+    console.log(this.contacts);
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
+      width: '300px',
+      data: { contacts: this.contacts } // Pass the contacts to the dialog
+    });
+
+    dialogRef.afterClosed().subscribe((selectedContact) => {
+      if (selectedContact) {
+        console.log('Selected contact:', selectedContact);
+
+        // Check if the selected user is already in the conversation
+        const isAlreadyInConversation = this.isUserInCurrentConversation(selectedContact.userId);
+
+        if (isAlreadyInConversation) {
+          this.toastr.warning('Người dùng đã là thành viên của cuộc trò chuyện!', 'Warning');
+        } else {
+          this.addMemberToConversation(selectedContact.userId, this.currentConversationId);
+        }
+      }
+    });
+  }
+
+  // Check if a user is already in the current conversation
+  isUserInCurrentConversation(userId: number): boolean {
+    if (!this.currentConversationId || !this.conversationsList) return false;
+
+    const currentConversation = this.conversationsList.find(
+      (conversation: any) => conversation.id === this.currentConversationId
+    );
+
+    if (!currentConversation || !currentConversation.participants) return false;
+
+    // Check if the user is already a participant
+    return currentConversation.participants.some(
+      (participant: any) => participant.userId === userId
+    );
+  }
+
+  // Add the selected member to the conversation
+  addMemberToConversation(userId: number, conversationId: number): void {
+    this.addMemberService.addParticipant(userId, conversationId).subscribe(
+      (response) => {
+        console.log('Member added successfully:', response);
+        this.toastr.success('Thành viên mới đã được thêm thành công!', 'Success');
+        this.fetchConversations(); // Refresh the conversation list
+      },
+      (error) => {
+        console.error('Error adding member:', error);
+        this.toastr.error('Lỗi khi thêm thành viên. Vui lòng thử lại!', 'Error');
+      }
+    );
+  }
+
+  // Open dialog to remove a member
+  openRemoveMemberDialog(): void {
+    if (!this.currentConversationId) {
+      this.toastr.warning('Vui lòng chọn một cuộc trò chuyện trước!', 'Warning');
+      return;
+    }
+
+    // Fetch participants from the current conversation
+    const selectedConversation = this.conversationsList.find(
+      (conversation) => conversation.id === this.currentConversationId
+    );
+
+    if (!selectedConversation || !selectedConversation.participants || selectedConversation.participants.length === 0) {
+      this.toastr.warning('Không có thành viên nào trong cuộc trò chuyện này!', 'Warning');
+      return;
+    }
+
+    // Open the dialog
+    const dialogRef = this.dialog.open(RemoveMemberDialogComponent, {
+      width: '300px',
+      data: { participants: selectedConversation.participants },
+    });
+
+    dialogRef.afterClosed().subscribe((participantId) => {
+      if (participantId) {
+        this.removeParticipant(participantId, this.currentConversationId);
+      }
+    });
+  }
+
+  // Remove participant using the service
+  removeParticipant(participantId: number, conversationId: number): void {
+    this.removeMemberService.removeParticipant(participantId, conversationId).subscribe(
+      (response) => {
+        console.log('Participant removed successfully:', response);
+        this.toastr.success('Thành viên đã được xóa thành công!', 'Success');
+
+        // Refresh conversation list
+        this.fetchConversations();
+      },
+      (error) => {
+        console.error('Error removing participant:', error);
+        this.toastr.error('Lỗi khi xóa thành viên. Vui lòng thử lại!', 'Error');
+      }
+    );
   }
 }
