@@ -470,7 +470,7 @@ export class MainPageComponent implements OnInit {
   }
 
   getParticipantNames(conversation: any): string {
-    // Filter out the current user (participant ID = 1) and join other participants' names
+    // Filter out the current user (participant ID = current user id) and join other participants' names
     return conversation.participants
       .filter((participant: any) => participant.userId !== this.currentUserId)
       .map((participant: any) => participant.participantName)
