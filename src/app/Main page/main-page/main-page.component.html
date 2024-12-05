@@ -6,12 +6,7 @@
             <div class="profile-section">
                 <!-- Display current user profile picture -->
                 <img src="{{ currentUserPhoto }}" alt="Profile" class="profile-image" (click)="toggleMenu()">
-
-                <!-- File input to select an avatar -->
-                <!-- <input type="file" accept="image/*" id="avatarUpload" (change)="handleAvatarUpdate($event)" hidden />
-                <label for="avatarUpload" class="upload-avatar-btn">Update Avatar</label> -->
             </div>
-
 
             <!-- Pop-up menu -->
             <div class="profile-menu" *ngIf="isMenuVisible">
@@ -34,25 +29,6 @@
             <div class="clickable" (click)="setActiveView('contacts')">
                 <div class="img-container">
                     <img src="assets/contact-book.png" alt="chat-icon">
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottom Section -->
-        <div class="sidebar-bottom">
-            <div class="clickable" (click)="onClick()">
-                <div class="img-container">
-                    <img src="assets/cloud.png" alt="chat-icon">
-                </div>
-            </div>
-            <div class="clickable" (click)="onClick()">
-                <div class="img-container">
-                    <img src="assets/briefcase.png" alt="chat-icon">
-                </div>
-            </div>
-            <div class="clickable" (click)="onClick()">
-                <div class="img-container">
-                    <img src="assets/settings.png" alt="chat-icon">
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class AddMemberService {
-    private readonly API_URL = 'http://128.199.91.226:8082/api/conversation';
+    private readonly API_URL = 'http://157.245.156.156:8082/api/conversation';
 
     constructor(private http: HttpClient) { }
 

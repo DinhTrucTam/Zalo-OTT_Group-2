@@ -20,7 +20,6 @@ export class SignupPageComponent implements OnInit {
     password_2: ''
   };
 
-  // private apiUrl = 'http://128.199.91.226:8082/api/send/mail/verify_code';
   private apiUrl = '/api/send/mail/verify_code';
 
   constructor(
@@ -49,7 +48,6 @@ export class SignupPageComponent implements OnInit {
     const email = encodeURIComponent(this.signupObj.email);
     const url = `${this.apiUrl}?email=${email}`;
 
-
     this.http.get(url, { headers }).subscribe(
       (response: any) => {
         console.log('Mã số xác minh đã được gửi đến email của bạn', response);
@@ -72,7 +70,7 @@ export class SignupPageComponent implements OnInit {
 
   openVerificationDialog() {
     const dialogRef = this.dialog.open(VerificationDialogComponent, {
-      width: '300px',
+      width: '400px',
       disableClose: true
     });
 
@@ -133,7 +131,7 @@ export class SignupPageComponent implements OnInit {
       Cookie: 'JSESSIONID=A131F42C8102F93E213C7AA016E31DA2'
     });
 
-    this.http.post('http://128.199.91.226:8082/api/signUp', signupPayload, { headers })
+    this.http.post('http://157.245.156.156:8082/api/signUp', signupPayload, { headers })
       .subscribe(
         (response: any) => {
           console.log('Đăng ký tài khoản thành công:', response);

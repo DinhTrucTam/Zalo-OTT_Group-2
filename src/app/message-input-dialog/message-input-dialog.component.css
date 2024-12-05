@@ -1,9 +1,8 @@
 /* Style for the dialog container */
-.verification-dialog {
+.message-input-dialog {
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
-    max-width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -11,32 +10,28 @@
 /* Title styling */
 .dialog-title {
     font-size: 24px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-weight: bold;
     color: #333;
 }
 
-/* Description styling */
-.dialog-description {
-    font-size: 16px;
+/* Content styling (textarea container) */
+.dialog-content {
     margin-bottom: 20px;
-    color: #666;
 }
 
-/* Styling for the input field */
-.verification-input {
-    width: 80%;
+/* Styling for the message textarea */
+.message-textarea {
     padding: 12px;
     font-size: 16px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    margin-bottom: 20px;
-    text-align: center;
+    resize: none;
     outline: none;
     transition: border 0.3s ease;
 }
 
-.verification-input:focus {
+.message-textarea:focus {
     border-color: #4CAF50;
     /* Green border when focused */
 }
@@ -60,13 +55,13 @@ button {
     width: 45%;
 }
 
-/* Submit button styles */
-.submit-btn {
+/* Send button styles */
+.send-btn {
     background-color: #4CAF50;
     color: #fff;
 }
 
-.submit-btn:hover {
+.send-btn:hover {
     background-color: #45a049;
 }
 

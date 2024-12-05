@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactDialogComponent } from '../../contact-dialog/contact-dialog.component';
 import { RemoveMemberService } from './Services/removemember.service';
 import { RemoveMemberDialogComponent } from '../../remove-member-dialog/remove-member-dialog.component';
-
+import { MessageInputDialogComponent } from '../../message-input-dialog/message-input-dialog.component';
 
 // Define User and Conversation interfaces
 interface User {
@@ -92,7 +92,7 @@ export class MainPageComponent implements OnInit {
   setupWebSocket(): void {
     //Initialize WebSocket
     this.socket$ = new WebSocketSubject({
-      url: 'ws://128.199.91.226:8082/text',
+      url: 'ws://157.245.156.156:8082/text',
       deserializer: (msg) => {
         try {
           return JSON.parse(msg.data);
@@ -119,12 +119,12 @@ export class MainPageComponent implements OnInit {
       error: (err) => {
         console.error('WebSocket error:', err);
         // Reconnect after an error
-        setTimeout(() => this.setupWebSocket(), 3000);
+        setTimeout(() => this.setupWebSocket(), 60000);
       },
       complete: () => {
         console.log('WebSocket connection closed');
         // Optionally, reconnect on close
-        setTimeout(() => this.setupWebSocket(), 3000);
+        //setTimeout(() => this.setupWebSocket(), 3000);
       },
     });
   }
@@ -163,94 +163,279 @@ export class MainPageComponent implements OnInit {
     );
   }
 
-  //Retrieve contacts by searching phone number
-  searchContactByPhone(): void {
-    // Remove any whitespace from the input
-    this.searchInput = this.searchInput.trim();
-    if (!this.searchInput) {
-      alert('Vui lòng nhập số điện thoại hoặc tên để tìm kiếm.');
-      return;
-    }
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      alert('Authentication token missing. Please log in again.');
-      return;
-    }
-    // If the input is a valid 10-digit phone number, search by phone
-    if (this.searchInput.length === 10 && /^\d+$/.test(this.searchInput)) {
-      const payload = {
-        participantUserId: this.currentUserId, // Current user ID
-        phone: this.searchInput,
-        privateChat: true,
-      };
-      this.searchingService.searchContact(payload, token).subscribe({
-        next: (response: any) => {
-          console.log('Search successful:', response);
+  // onSearch(): void {
+  //   const token = localStorage.getItem('accessToken');
+  //   if (!this.searchInput || !token) {
+  //     alert('Vui lòng nhập số điện thoại hoặc tên và đảm bảo bạn đã đăng nhập.');
+  //     return;
+  //   }
 
-          const participants = response?.content[0]?.participants || [];
-          this.searchResults = participants.map((p: any) => ({
-            userId: p.userId,
-            participantName: p.participantName,
-            profilePhoto: p.profilePhoto || 'assets/default-profile.png'
-          }));
+  //   const isPhoneSearch = /^\d{10}$/.test(this.searchInput);
+
+  //   if (isPhoneSearch) {
+  //     // Search by phone
+  //     const payload = {
+  //       participantUserId: this.currentUserId,
+  //       phone: this.searchInput,
+  //       privateChat: true
+  //     };
+
+  //     this.searchingService.fetchConversations(payload, token).subscribe({
+  //       next: (response) => {
+  //         if (response && response.content && response.content.length > 0) {
+  //           // Map the participants
+  //           this.searchResults = response.content.flatMap((conversation: any) =>
+  //             conversation.participants.map((participant: any) => ({
+  //               userId: participant.userId,
+  //               participantName: participant.participantName,
+  //               profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
+  //             }))
+  //           );
+  //         } else {
+  //           // If no matching conversations found, call searchUserByPhoneOrName
+  //           this.searchingService.searchUserByPhoneOrName({ phone: this.searchInput }, token).subscribe({
+  //             next: (userResponse) => {
+  //               this.searchResults = (userResponse.content || []).map((user: any) => ({
+  //                 userId: user.id,
+  //                 participantName: user.UserName,
+  //                 profilePhoto: user.profilePhoto || 'assets/default-profile.png'
+  //               }));
+  //             },
+  //             error: (error) => {
+  //               console.error('Error fetching user:', error);
+  //               alert('Không tìm thấy thông tin liên lạc.');
+  //             }
+  //           });
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching conversations:', error);
+  //       }
+  //     });
+  //   } else {
+  //     // Search by name
+  //     const payload = {
+  //       participantUserId: this.currentUserId,
+  //       name: this.searchInput
+  //     };
+
+  //     this.searchingService.fetchConversations(payload, token).subscribe({
+  //       next: (response) => {
+  //         const matchingConversations = response.content || [];
+  //         if (matchingConversations.length > 0) {
+  //           const matchedUsers = matchingConversations.flatMap((conversation: any) =>
+  //             conversation.participants.filter((participant: any) =>
+  //               participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())
+  //             )
+  //           );
+
+  //           this.searchResults = matchedUsers.map((participant: any) => ({
+  //             userId: participant.userId,
+  //             participantName: participant.participantName,
+  //             profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
+  //           }));
+  //         } else {
+  //           alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
+  //         }
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching conversations:', error);
+  //       }
+  //     });
+  //   }
+  // }
+
+  onSearch(): void {
+    const token = localStorage.getItem('accessToken');
+    if (!this.searchInput || !token) {
+      alert('Vui lòng nhập số điện thoại hoặc tên và đảm bảo bạn đã đăng nhập.');
+      return;
+    }
+
+    const isPhoneSearch = /^\d{10}$/.test(this.searchInput);
+
+    if (isPhoneSearch) {
+      // Search by phone
+      const payload = {
+        participantUserId: this.currentUserId,
+        phone: this.searchInput,
+        privateChat: true
+      };
+
+      this.searchingService.fetchConversations(payload, token).subscribe({
+        next: (response) => {
+          if (response && response.content && response.content.length > 0) {
+            // Map the participants
+            this.searchResults = response.content.flatMap((conversation: any) =>
+              conversation.participants.map((participant: any) => ({
+                userId: participant.userId,
+                participantName: participant.participantName,
+                profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
+              }))
+            );
+          } else {
+            // If no matching conversations found, call searchUserByPhoneOrName
+            this.searchingService.searchUserByPhoneOrName({ phone: this.searchInput }, token).subscribe({
+              next: (userResponse) => {
+                this.searchResults = (userResponse.content || []).map((user: any) => ({
+                  userId: user.id,
+                  participantName: user.UserName,
+                  profilePhoto: user.profilePhoto || 'assets/default-profile.png'
+                }));
+                if (this.searchResults.length === 0) {
+                  alert('No conversations found with this user.');
+                  this.openMessageInputDialog(this.selectedUser); // Open the dialog for message input
+                }
+              },
+              error: (error) => {
+                console.error('Error fetching user:', error);
+                alert('Không tìm thấy thông tin liên lạc.');
+              }
+            });
+          }
         },
         error: (error) => {
-          console.error('Error fetching contact:', error);
-          alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
+          console.error('Error fetching conversations:', error);
         }
       });
-      return;
-    }
-  }
-
-  // Retrieve contacts by searching name in private chats
-  searchContactByName(searchTerm: string): void {
-    // Filter conversations where privateChat is true
-    const matchingConversations = this.conversationsList.filter(conversation =>
-      conversation.privateChat &&
-      conversation.participants.some((participant: any) =>
-        participant.participantName.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-
-    if (matchingConversations.length === 0) {
-      alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
     } else {
-      // Extract the participants that match the name
-      const matchedUsers = matchingConversations.flatMap(conversation =>
-        conversation.participants.filter((participant: any) =>
-          participant.participantName.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+      // Search by name
+      const payload = {
+        participantUserId: this.currentUserId,
+        name: this.searchInput
+      };
 
-      // Map the matched users to display data
-      this.searchResults = matchedUsers.map((participant: any) => ({
-        userId: participant.userId,
-        participantName: participant.participantName,
-        profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
-      }));
+      this.searchingService.fetchConversations(payload, token).subscribe({
+        next: (response) => {
+          const matchingConversations = response.content || [];
+          if (matchingConversations.length > 0) {
+            const matchedUsers = matchingConversations.flatMap((conversation: any) =>
+              conversation.participants.filter((participant: any) =>
+                participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())
+              )
+            );
 
-      console.log('Search by name in private chats results:', this.searchResults);
+            this.searchResults = matchedUsers.map((participant: any) => ({
+              userId: participant.userId,
+              participantName: participant.participantName,
+              profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
+            }));
+          } else {
+            alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching conversations:', error);
+        }
+      });
     }
   }
 
-  //Decide which types of searching (phone or name)
-  onSearch(): void {
-    const searchInput = this.searchInput.trim();
-    if (!searchInput) {
-      // Handle empty input
-      this.searchResults = [];
-      return;
-    }
-    if (/^\d+$/.test(searchInput)) {
-      // Input is a phone number (contains only digits)
-      this.searchContactByPhone();
-    } else {
-      // Input is not a phone number, assume it's a name
-      this.searchContactByName(searchInput);
-    }
+  // openMessageInputDialog(): void {
+  //   const dialogRef = this.dialog.open(MessageInputDialogComponent);
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result) {
+  //       // Handle the message result here, like starting a new conversation
+  //       console.log('User entered message:', result);
+  //     }
+  //   });
+  // }
+  openMessageInputDialog(selectedUser: any): void {
+    const dialogRef = this.dialog.open(MessageInputDialogComponent, {
+      data: {
+        currentUserId: this.currentUserId,
+        selectedUser: selectedUser // Pass selected user to the dialog
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle the message (e.g., you can call a method to send the message)
+        console.log('User entered message:', result);
+        this.toastr.success("Kết bạn thành công!", 'success');
+        this.fetchConversations();
+        const groupPayload = {
+          Admin: this.currentUserId,
+          participants: this.selectedMembers.map(member => member.userId),
+        };
+
+        this.groupCreationService.createGroup(groupPayload.Admin, groupPayload.participants).subscribe(
+          (response) => {
+            console.log('Group created successfully:', response);
+            this.toastr.success('Tạo nhóm thành công!', 'Success');
+            this.selectedMembers = []; // Reset selected members
+          },
+          (error) => {
+            console.error('Error creating group:', error);
+            this.toastr.error('Tạo nhóm thất bại.', 'error');
+          }
+        );
+
+        //resend the message
+        if (!this.selectedUser || !this.messageText.trim()) {
+          console.error('No user selected or message is empty.');
+          return;
+        }
+
+        if (!this.socket$) {
+          console.error('WebSocket is not connected.');
+          this.setupWebSocket(); // Attempt to reconnect
+          return;
+        }
+
+        const newMessage = {
+          content: this.messageText.trim(),
+          contentType: 'TEXT',
+          conversationId: this.selectedUser.id,
+          senderId: this.currentUserId,
+        };
+
+        try {
+          this.socket$.next(newMessage); // Send the message
+          console.log('Message sent:', newMessage);
+          this.fetchConversations();
+          // Clear input field
+          this.messageText = '';
+        } catch (err) {
+          console.error('Error sending message:', err);
+          //this.setupWebSocket(); // Attempt to reconnect
+        }
+      }
+    });
   }
 
+  // onUserSelected(selectedUser: any): void {
+  //   if (!selectedUser) return;
+  //   const userId = selectedUser.userId;
+  //   // Filter conversations that include the selected user
+  //   const matchingConversations = this.conversationsList.filter(conversation =>
+  //     conversation.participants.some((participant: any) => participant.userId === userId)
+  //   );
+  //   if (matchingConversations.length > 0) {
+  //     this.conversationsList = matchingConversations; // Update the left chat list
+  //     this.setActiveView('conversations'); // Switch to the conversations view if not already
+  //   } else {
+  //     alert('No conversations found with this user.');
+  //   }
+  // }
+
+  //Click on "Tất cả", and fetch again all conversations
+  // onUserSelected(selectedUser: any): void {
+  //   if (!selectedUser) return;
+  //   const userId = selectedUser.userId;
+  //   // Filter conversations that include the selected user
+  //   const matchingConversations = this.conversationsList.filter(conversation =>
+  //     conversation.participants.some((participant: any) => participant.userId === userId)
+  //   );
+  //   if (matchingConversations.length > 0) {
+  //     this.conversationsList = matchingConversations; // Update the left chat list
+  //     this.setActiveView('conversations'); // Switch to the conversations view if not already
+  //   } else {
+  //     alert('No conversations found with this user.');
+  //     this.openMessageInputDialog(); // Open the dialog for message input
+  //   }
+  // }
   onUserSelected(selectedUser: any): void {
     if (!selectedUser) return;
     const userId = selectedUser.userId;
@@ -263,10 +448,10 @@ export class MainPageComponent implements OnInit {
       this.setActiveView('conversations'); // Switch to the conversations view if not already
     } else {
       alert('No conversations found with this user.');
+      this.openMessageInputDialog(selectedUser); // Open dialog to create a new conversation
     }
   }
 
-  //Click on "Tất cả", and fetch again all conversations
   resetView(): void {
     this.ngOnInit();
   }
@@ -287,7 +472,7 @@ export class MainPageComponent implements OnInit {
   getParticipantNames(conversation: any): string {
     // Filter out the current user (participant ID = 1) and join other participants' names
     return conversation.participants
-      .filter((participant: any) => participant.userId !== 1)
+      .filter((participant: any) => participant.userId !== this.currentUserId)
       .map((participant: any) => participant.participantName)
       .join(', ');
   }
@@ -326,8 +511,6 @@ export class MainPageComponent implements OnInit {
     this.activeView = 'conversations'; // Switch to conversations view if needed
     this.currentConversationId = conversationId;
   }
-
-
 
   // Handling images/video/docs
   @ViewChild('imageInput') imageInput!: ElementRef<HTMLInputElement>;

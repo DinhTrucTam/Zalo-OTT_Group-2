@@ -28,6 +28,7 @@ import { SafeHtmlPipe } from './safe-html.pipe';
 import { VerificationDialogComponent } from './Authentication/verification-dialog/verification-dialog.component';
 import { ContactDialogComponent } from './contact-dialog/contact-dialog.component';
 import { RemoveMemberDialogComponent } from './remove-member-dialog/remove-member-dialog.component';
+import { MessageInputDialogComponent } from './message-input-dialog/message-input-dialog.component';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { RemoveMemberDialogComponent } from './remove-member-dialog/remove-membe
     VerificationDialogComponent,
     ContactDialogComponent,
     RemoveMemberDialogComponent,
+    MessageInputDialogComponent,
   ],
   imports: [
     BrowserModule,

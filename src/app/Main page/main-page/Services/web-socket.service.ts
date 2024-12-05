@@ -23,7 +23,7 @@ export class WebSocketService {
         this.socket$.subscribe({
             next: onMessage,
             error: onError,
-            complete: () => setTimeout(() => this.connect(url, onMessage, onError), 3000), // Reconnect
+            complete: () => setTimeout(() => this.connect(url, onMessage, onError), 60000), // Reconnect
         });
     }
 

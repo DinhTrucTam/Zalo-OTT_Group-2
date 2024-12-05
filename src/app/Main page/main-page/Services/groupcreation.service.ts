@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class GroupCreationService {
-    private readonly apiUrl = 'http://128.199.91.226:8082/api/conversation/generate'; // Replace with your API URL
+    private readonly apiUrl = 'http://157.245.156.156:8082/api/conversation/generate'; // Replace with your API URL
 
     constructor(private http: HttpClient) { }
 

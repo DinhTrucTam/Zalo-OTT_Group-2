@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root',
 })
 export class RemoveMemberService {
-    private baseUrl = 'http://128.199.91.226:8082/api/conversation'; // Base URL for API
+    private baseUrl = 'http://157.245.156.156:8082/api/conversation'; // Base URL for API
 
     constructor(private httpClient: HttpClient) { }
 

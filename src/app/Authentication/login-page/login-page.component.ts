@@ -14,7 +14,7 @@ export class LoginPageComponent implements OnInit {
     password: '',
   };
 
-  private loginApiUrl = 'http://128.199.91.226:8082/api/login';
+  private loginApiUrl = 'http://157.245.156.156:8082/api/login';
 
   constructor(
     private router: Router,
@@ -50,6 +50,7 @@ export class LoginPageComponent implements OnInit {
         // Save the access token and user details to localStorage
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('userId', response.userId);
+        console.log(response.userId)
 
         // Navigate to the main page
         setTimeout(() => {
