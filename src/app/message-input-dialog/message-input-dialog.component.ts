@@ -20,6 +20,7 @@ export class MessageInputDialogComponent {
     if (this.message.trim()) {
       const currentUserId = this.data.currentUserId;
       const selectedUserId = this.data.selectedUser.userId;
+      console.log(currentUserId, selectedUserId);
 
       // Call the GroupCreationService to create the group
       this.groupCreationService.createGroup(currentUserId, [currentUserId, selectedUserId]).subscribe({

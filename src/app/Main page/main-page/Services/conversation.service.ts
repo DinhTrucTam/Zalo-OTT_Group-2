@@ -25,7 +25,7 @@ export class ConversationService {
       'Content-Type': 'application/json'
     });
 
-    const body = { participantUserId };
+    const body = { "participantUserIds":[participantUserId] };
 
     return this.http.post<any>(this.apiUrl, body, { headers });
   }

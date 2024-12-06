@@ -61,12 +61,13 @@
                         <li *ngFor="let conversation of conversationsList" class="chat-item"
                             (click)="selectConversation(conversation)">
                             <div class="chat-info">
-                                <!-- Avatar placeholder (you can replace this with actual participant images if available) -->
-                                <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                                <!-- Dynamically display participant names and avatar for each conversation -->
+                                <img [src]="getParticipantNames(conversation).photo" alt="User Avatar"
+                                    class="header-avatar">
                                 <div>
                                     <!-- Dynamically display participant names for each conversation -->
                                     <p class="chat-name">
-                                        {{ getParticipantNames(conversation) }}
+                                        {{ getParticipantNames(conversation).names }}
                                     </p>
                                     <!-- Placeholder for last message -->
                                     <p class="last-message">
@@ -127,11 +128,13 @@
 
         <div *ngIf="activeView === 'contacts'">
             <ul class="chat-list">
-                <li *ngFor="let content of contactBox" class="chat-item">
+                <li *ngFor="let content of contactBox" class="chat-item" (click)="setActiveContent(content)">
                     <div class="chat-info">
-                        <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                        <!-- Dynamically set the image based on the content type -->
+                        <img [src]="content === 'Danh sách bạn bè' ? defaultFriendsListImage : defaultGroupsListImage"
+                            alt="User Avatar" class="header-avatar">
                         <div>
-                            <p class="chat-name">{{content}}</p>
+                            <p class="chat-name">{{ content }}</p>
                         </div>
                     </div>
                 </li>
@@ -142,7 +145,7 @@
     <!-- Right Panel (Main Content) -->
     <main class="content">
         <!-- Default Message When No Conversation is Selected -->
-        <div *ngIf="!selectedUser" class="welcome-page">
+        <div *ngIf="!selectedUser && activeView === 'conversations'" class="welcome-page">
             <img src="assets/Logo_Zalo.png" alt="Welcome Image" class="welcome-image">
             <h2>Chào mừng đến với Zalo PC!</h2>
             <p>Khám phá những tiện ích hỗ trợ làm việc và trò chuyện cùng<br>
@@ -150,11 +153,14 @@
         </div>
 
         <!-- Conversation Box When a User is Selected -->
-        <div *ngIf="selectedUser">
+        <div *ngIf="selectedUser && activeView === 'conversations'">
             <!-- Header part -->
             <div class="conversation-header">
                 <div class="conversation-header-left">
-                    <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                    <!-- <img src="assets/letter-z.png" alt="User Avatar" class="header-avatar">
+                    <span class="header-username">{{ selectedUser.userName }}</span> -->
+                    <!-- Dynamically set the user's avatar -->
+                    <img [src]="selectedUser.photo" alt="User Avatar" class="header-avatar">
                     <span class="header-username">{{ selectedUser.userName }}</span>
                 </div>
                 <div class="conversation-header-right">
@@ -175,6 +181,11 @@
                 <div *ngIf="selectedUser">
                     <div *ngFor="let message of getConversationMessages()"
                         [ngClass]="{'message': true, 'you': message.sender === currentUserId, 'sender': message.sender !== currentUserId}">
+
+                        <!-- Show sender's name if it's a group chat -->
+                        <div class="message-sender">
+                            {{ message.senderName }}
+                        </div>
 
                         <!-- Check if the content is an image -->
                         <ng-container *ngIf="isImage(message.content); else notImage">
@@ -218,14 +229,14 @@
                 <button class="feature-btn" title="Gửi video" (click)="triggerFileInput('video')">
                     <img src="assets/video.png" alt="Send Video">
                 </button>
-                <input type="file" #videoInput accept=".mkv,.gif,.gifv,.mov,.qt,.wmv,.mp4,.m4v,.zip,.rar"
+                <input type="file" #videoInput accept=".mkv,.gif,.gifv,.mov,.qt,.wmv,.mp4,.m4v"
                     (change)="handleFileInput($event, 'video')" hidden>
 
                 <!-- Document Upload -->
                 <button class="feature-btn" title="Gửi các tệp đính kèm" (click)="triggerFileInput('document')">
                     <img src="assets/attach.png" alt="Send File">
                 </button>
-                <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt,.xls,.xlsx"
+                <input type="file" #documentInput accept=".pdf,.doc,.docx,.txt,.xls,.xlsx,.zip,.rar"
                     (change)="handleFileInput($event, 'document')" hidden>
             </div>
 
@@ -239,6 +250,38 @@
                 <button class="like-btn">
                     <img src="assets/like.png" alt="Like">
                 </button>
+            </div>
+        </div>
+
+        <div *ngIf="activeView === 'contacts'" class="content-contacts">
+            <div *ngIf="selectedContent === 'Danh sách bạn bè'">
+                <!-- Custom HTML for 'Danh sách bạn bè' (Friends List) -->
+                <p class="friends-list-header">Danh sách bạn bè</p>
+
+                <!-- Loop through filteredContacts to display the contact name and profile photo -->
+                <ul class="contacts-list">
+                    <li *ngFor="let contact of filteredContacts" class="contact-item">
+                        <div class="contact-info">
+                            <img [src]="contact.profilePhoto" alt="{{ contact.name }}'s Profile" class="contact-avatar">
+                            <span class="contact-name">{{ contact.name }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div *ngIf="selectedContent === 'Danh sách nhóm'">
+                <!-- Custom HTML for 'Groups' -->
+                <p class="friends-list-header">Danh sách nhóm</p>
+                <!-- Loop through filteredGroups to display the group name and profile photo -->
+                <ul class="contacts-list">
+                    <li *ngFor="let group of filteredGroups" class="contact-item">
+                        <div class="contact-info">
+                            <img [src]="group.groupProfileImage" alt="{{ group.groupName }}'s Profile"
+                                class="contact-avatar">
+                            <span class="contact-name">{{ group.groupNames }}</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </main>

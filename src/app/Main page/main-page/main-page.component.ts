@@ -19,6 +19,7 @@ import { MessageInputDialogComponent } from '../../message-input-dialog/message-
 interface User {
   id: number;
   userName: string;
+  photo?: string;  // Optional photo property
 }
 
 interface Message {
@@ -57,12 +58,17 @@ export class MainPageComponent implements OnInit {
   //parameters//
   isMenuVisible: boolean = false; // To track the visibility of the menu
   activeView: string = 'conversations'; // Default view is conversations
+  selectedContent: string = '';     // Holds the selected content for right panel
   selectedUser: User | null = null;  // Use User type or null
   messageText: string = '';
   conversationsList: any[] = []; // To hold conversations data
   currentUserId: any;
   currentUserName: string = 'Unknown User'; // Default name
-  currentUserPhoto: string = 'assets/default-profile.png'; // Default profile image
+  defaultUserProfleImage: string = 'assets/user.png'; // Default profile image
+  currentUserPhoto: string = this.defaultUserProfleImage; // Default profile image
+  defaultGroupProfileImage = 'assets/team.png';
+  defaultFriendsListImage = 'assets/friends_list.png';
+  defaultGroupsListImage = 'assets/groups_list.png';
   searchInput: string = ''; // Holds the entered phone number
   searchResults: any[] = []; // Stores the API results
   conversations: Conversations = {};
@@ -72,6 +78,8 @@ export class MainPageComponent implements OnInit {
   contacts: any[] = []; // List of all contacts
   selectedMembers: any[] = []; // Selected members for the group
   currentConversationId: any;
+  filteredContacts: any[] = [];
+  filteredGroups: any[] = [];
 
   //this function is called whenever the main page is reloaded/accessed
   ngOnInit(): void {
@@ -87,6 +95,22 @@ export class MainPageComponent implements OnInit {
     // setInterval(() => {
     //   this.fetchConversations();
     // }, 1000);
+  }
+
+  // Function to set the active view
+  setActiveView(view: string): void {
+    this.activeView = view;
+  }
+
+  // Set the selected content when a contact is clicked
+  setActiveContent(content: string) {
+    this.selectedContent = content;
+    if (this.selectedContent == "Danh sách bạn bè") {
+      this.filterContacts();
+    }
+    else {
+      this.filterGroups();
+    }
   }
 
   setupWebSocket(): void {
@@ -163,87 +187,49 @@ export class MainPageComponent implements OnInit {
     );
   }
 
-  // onSearch(): void {
-  //   const token = localStorage.getItem('accessToken');
-  //   if (!this.searchInput || !token) {
-  //     alert('Vui lòng nhập số điện thoại hoặc tên và đảm bảo bạn đã đăng nhập.');
-  //     return;
-  //   }
+  extractContacts(): void {
+    // Create a Set to track unique userIds
+    const contactMap = new Map<number, any>();
 
-  //   const isPhoneSearch = /^\d{10}$/.test(this.searchInput);
+    this.conversationsList.forEach((conversation) => {
+      conversation.participants.forEach((participant: any) => {
+        if (participant.userId !== this.currentUserId && !contactMap.has(participant.userId)) {
+          // Add participant to the contacts list if not already added
+          contactMap.set(participant.userId, participant);
+        }
+      });
+    });
 
-  //   if (isPhoneSearch) {
-  //     // Search by phone
-  //     const payload = {
-  //       participantUserId: this.currentUserId,
-  //       phone: this.searchInput,
-  //       privateChat: true
-  //     };
+    // Convert Map values to an array to get the unique contacts
+    this.contacts = Array.from(contactMap.values());
+    console.log('Extracted Contacts:', this.contacts);
+  }
 
-  //     this.searchingService.fetchConversations(payload, token).subscribe({
-  //       next: (response) => {
-  //         if (response && response.content && response.content.length > 0) {
-  //           // Map the participants
-  //           this.searchResults = response.content.flatMap((conversation: any) =>
-  //             conversation.participants.map((participant: any) => ({
-  //               userId: participant.userId,
-  //               participantName: participant.participantName,
-  //               profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
-  //             }))
-  //           );
-  //         } else {
-  //           // If no matching conversations found, call searchUserByPhoneOrName
-  //           this.searchingService.searchUserByPhoneOrName({ phone: this.searchInput }, token).subscribe({
-  //             next: (userResponse) => {
-  //               this.searchResults = (userResponse.content || []).map((user: any) => ({
-  //                 userId: user.id,
-  //                 participantName: user.UserName,
-  //                 profilePhoto: user.profilePhoto || 'assets/default-profile.png'
-  //               }));
-  //             },
-  //             error: (error) => {
-  //               console.error('Error fetching user:', error);
-  //               alert('Không tìm thấy thông tin liên lạc.');
-  //             }
-  //           });
-  //         }
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching conversations:', error);
-  //       }
-  //     });
-  //   } else {
-  //     // Search by name
-  //     const payload = {
-  //       participantUserId: this.currentUserId,
-  //       name: this.searchInput
-  //     };
+  // Filter contacts to only include participantName and profilePhoto
+  filterContacts(): void {
+    this.filteredContacts = this.contacts.map(contact => ({
+      name: contact.participantName,
+      profilePhoto: contact.profilePhoto || this.defaultUserProfleImage // Default image if no profile photo
+    }));
+  }
 
-  //     this.searchingService.fetchConversations(payload, token).subscribe({
-  //       next: (response) => {
-  //         const matchingConversations = response.content || [];
-  //         if (matchingConversations.length > 0) {
-  //           const matchedUsers = matchingConversations.flatMap((conversation: any) =>
-  //             conversation.participants.filter((participant: any) =>
-  //               participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())
-  //             )
-  //           );
+  // Filter groups to only include participantName and profilePhoto
+  filterGroups(): void {
+    // Filter out conversations where privateChat is false
+    this.filteredGroups = this.conversationsList
+      .filter(conversation => conversation.privateChat === false)
+      .map(conversation => {
+        // Get all participants' names
+        const groupNames = conversation.participants.map((participant: any) => participant.participantName).join(', ') || 'No Participants Available';
+        // Get the profile image of the first participant, or use the default
+        const groupProfileImage = this.defaultGroupProfileImage;
 
-  //           this.searchResults = matchedUsers.map((participant: any) => ({
-  //             userId: participant.userId,
-  //             participantName: participant.participantName,
-  //             profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
-  //           }));
-  //         } else {
-  //           alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
-  //         }
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching conversations:', error);
-  //       }
-  //     });
-  //   }
-  // }
+        return {
+          groupNames,         // All participant names as a string, separated by commas
+          groupProfileImage   // Profile image of the first participant or default
+        };
+      });
+  }
 
   onSearch(): void {
     const token = localStorage.getItem('accessToken');
@@ -253,25 +239,29 @@ export class MainPageComponent implements OnInit {
     }
 
     const isPhoneSearch = /^\d{10}$/.test(this.searchInput);
+    console.log("Phone or name: ", isPhoneSearch);
 
     if (isPhoneSearch) {
       // Search by phone
       const payload = {
-        participantUserId: this.currentUserId,
-        phone: this.searchInput,
-        privateChat: true
+        "participantUserIds": [this.currentUserId],
+        "phone": this.searchInput,
+        "privateChat": true
       };
-
       this.searchingService.fetchConversations(payload, token).subscribe({
         next: (response) => {
           if (response && response.content && response.content.length > 0) {
-            // Map the participants
+            // Map the participants and filter based on participantName
             this.searchResults = response.content.flatMap((conversation: any) =>
-              conversation.participants.map((participant: any) => ({
-                userId: participant.userId,
-                participantName: participant.participantName,
-                profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
-              }))
+              conversation.participants
+                .filter((participant: any) =>
+                  participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())  // Filter by name
+                )
+                .map((participant: any) => ({
+                  userId: participant.userId,
+                  participantName: participant.participantName,
+                  profilePhoto: participant.profilePhoto || 'assets/user.png'
+                }))
             );
           } else {
             // If no matching conversations found, call searchUserByPhoneOrName
@@ -280,7 +270,7 @@ export class MainPageComponent implements OnInit {
                 this.searchResults = (userResponse.content || []).map((user: any) => ({
                   userId: user.id,
                   participantName: user.UserName,
-                  profilePhoto: user.profilePhoto || 'assets/default-profile.png'
+                  profilePhoto: user.profilePhoto || 'assets/user.png'
                 }));
                 if (this.searchResults.length === 0) {
                   alert('No conversations found with this user.');
@@ -301,25 +291,33 @@ export class MainPageComponent implements OnInit {
     } else {
       // Search by name
       const payload = {
-        participantUserId: this.currentUserId,
-        name: this.searchInput
+        "participantUserIds": [this.currentUserId],
+        "privateChat": true
+        //"name": this.searchInput
       };
-
       this.searchingService.fetchConversations(payload, token).subscribe({
         next: (response) => {
+          console.log("Search by name results:", response);
           const matchingConversations = response.content || [];
           if (matchingConversations.length > 0) {
+            // Filter participants by name match
             const matchedUsers = matchingConversations.flatMap((conversation: any) =>
               conversation.participants.filter((participant: any) =>
-                participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())
+                participant.participantName.toLowerCase().includes(this.searchInput.toLowerCase())  // Filter by name match
               )
             );
 
             this.searchResults = matchedUsers.map((participant: any) => ({
               userId: participant.userId,
               participantName: participant.participantName,
-              profilePhoto: participant.profilePhoto || 'assets/default-profile.png'
+              profilePhoto: participant.profilePhoto || 'assets/user.png'
             }));
+
+            // If no matching participants, show alert
+            if (this.searchResults.length === 0) {
+              alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
+            }
+
           } else {
             alert('Không tìm thấy thông tin liên lạc. Vui lòng thử lại.');
           }
@@ -331,16 +329,6 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  // openMessageInputDialog(): void {
-  //   const dialogRef = this.dialog.open(MessageInputDialogComponent);
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       // Handle the message result here, like starting a new conversation
-  //       console.log('User entered message:', result);
-  //     }
-  //   });
-  // }
   openMessageInputDialog(selectedUser: any): void {
     const dialogRef = this.dialog.open(MessageInputDialogComponent, {
       data: {
@@ -364,6 +352,35 @@ export class MainPageComponent implements OnInit {
           (response) => {
             console.log('Group created successfully:', response);
             this.toastr.success('Tạo nhóm thành công!', 'Success');
+            //resend the message
+            if (!this.selectedUser || !result.trim()) {
+              console.error('No user selected or message is empty.');
+              return;
+            }
+
+            if (!this.socket$) {
+              console.error('WebSocket is not connected.');
+              this.setupWebSocket(); // Attempt to reconnect
+              return;
+            }
+
+            const newMessage = {
+              content: result.trim(),
+              contentType: 'TEXT',
+              conversationId: this.selectedUser.id,
+              senderId: this.currentUserId,
+            };
+
+            try {
+              this.socket$.next(newMessage); // Send the message
+              console.log('Message sent:', newMessage);
+              this.fetchConversations();
+              // Clear input field
+              result = '';
+            } catch (err) {
+              console.error('Error sending message:', err);
+              //this.setupWebSocket(); // Attempt to reconnect
+            }
             this.selectedMembers = []; // Reset selected members
           },
           (error) => {
@@ -371,71 +388,10 @@ export class MainPageComponent implements OnInit {
             this.toastr.error('Tạo nhóm thất bại.', 'error');
           }
         );
-
-        //resend the message
-        if (!this.selectedUser || !this.messageText.trim()) {
-          console.error('No user selected or message is empty.');
-          return;
-        }
-
-        if (!this.socket$) {
-          console.error('WebSocket is not connected.');
-          this.setupWebSocket(); // Attempt to reconnect
-          return;
-        }
-
-        const newMessage = {
-          content: this.messageText.trim(),
-          contentType: 'TEXT',
-          conversationId: this.selectedUser.id,
-          senderId: this.currentUserId,
-        };
-
-        try {
-          this.socket$.next(newMessage); // Send the message
-          console.log('Message sent:', newMessage);
-          this.fetchConversations();
-          // Clear input field
-          this.messageText = '';
-        } catch (err) {
-          console.error('Error sending message:', err);
-          //this.setupWebSocket(); // Attempt to reconnect
-        }
       }
     });
   }
 
-  // onUserSelected(selectedUser: any): void {
-  //   if (!selectedUser) return;
-  //   const userId = selectedUser.userId;
-  //   // Filter conversations that include the selected user
-  //   const matchingConversations = this.conversationsList.filter(conversation =>
-  //     conversation.participants.some((participant: any) => participant.userId === userId)
-  //   );
-  //   if (matchingConversations.length > 0) {
-  //     this.conversationsList = matchingConversations; // Update the left chat list
-  //     this.setActiveView('conversations'); // Switch to the conversations view if not already
-  //   } else {
-  //     alert('No conversations found with this user.');
-  //   }
-  // }
-
-  //Click on "Tất cả", and fetch again all conversations
-  // onUserSelected(selectedUser: any): void {
-  //   if (!selectedUser) return;
-  //   const userId = selectedUser.userId;
-  //   // Filter conversations that include the selected user
-  //   const matchingConversations = this.conversationsList.filter(conversation =>
-  //     conversation.participants.some((participant: any) => participant.userId === userId)
-  //   );
-  //   if (matchingConversations.length > 0) {
-  //     this.conversationsList = matchingConversations; // Update the left chat list
-  //     this.setActiveView('conversations'); // Switch to the conversations view if not already
-  //   } else {
-  //     alert('No conversations found with this user.');
-  //     this.openMessageInputDialog(); // Open the dialog for message input
-  //   }
-  // }
   onUserSelected(selectedUser: any): void {
     if (!selectedUser) return;
     const userId = selectedUser.userId;
@@ -463,27 +419,37 @@ export class MainPageComponent implements OnInit {
       const currentUser = conversation.participants.find((p: any) => p.userId === this.currentUserId);
       if (currentUser) {
         this.currentUserName = currentUser.participantName || 'Unknown User';
-        this.currentUserPhoto = currentUser.profilePhoto || 'assets/default-profile.png';
+        this.currentUserPhoto = currentUser.profilePhoto || 'assets/user.png';
         break;
       }
     }
   }
 
-  getParticipantNames(conversation: any): string {
-    // Filter out the current user (participant ID = current user id) and join other participants' names
-    return conversation.participants
-      .filter((participant: any) => participant.userId !== this.currentUserId)
-      .map((participant: any) => participant.participantName)
-      .join(', ');
+  getParticipantNames(conversation: any): { names: string, photo: string } {
+    let participantNames = '';
+    let profilePhoto = 'assets/user.png'; // Default profile photo
+
+    // Filter out the current user and get other participants
+    const otherParticipants = conversation.participants
+      .filter((participant: any) => participant.userId !== this.currentUserId);
+
+    // If there are other participants, build the names and choose the profile photo for the first participant
+    if (otherParticipants.length > 0) {
+      participantNames = otherParticipants.map((participant: any) => participant.participantName).join(', ');
+      // Use the profile photo of the first participant or the default photo
+      profilePhoto = otherParticipants[0].profilePhoto || 'assets/user.png';
+
+      const isPrivateChat = conversation.privateChat;
+      if (!isPrivateChat) {
+        profilePhoto = this.defaultGroupProfileImage;
+      }
+    }
+
+    return { names: participantNames, photo: profilePhoto };
   }
 
   toggleMenu() {
     this.isMenuVisible = !this.isMenuVisible; // Toggle menu visibility
-  }
-
-  // Function to set the active view
-  setActiveView(view: string): void {
-    this.activeView = view;
   }
 
   // Function to select a user and display the conversation
@@ -500,14 +466,22 @@ export class MainPageComponent implements OnInit {
 
     const conversationId = conversation.id; // Get the conversationId
     console.log('Selected Conversation ID:', conversationId);
+    const isPrivateChat = conversation.privateChat;
 
-    // Optionally, you can also set the selected user or conversation for further use
+    const participant = this.getParticipantNames(conversation);
+
+    // Set the selected user object with both name and photo
     this.selectedUser = {
       id: conversationId,
-      userName: this.getParticipantNames(conversation),
+      userName: participant.names,  // User name
+      photo: participant.photo       // User photo
     };
 
-    // If you want to store the current conversation ID for other purposes
+    if (!isPrivateChat) {
+      this.selectedUser.photo = this.defaultGroupProfileImage;
+    }
+
+    // Optionally, store the current conversation ID for other purposes
     this.activeView = 'conversations'; // Switch to conversations view if needed
     this.currentConversationId = conversationId;
   }
@@ -671,8 +645,19 @@ export class MainPageComponent implements OnInit {
 
   getConversationMessages(): any[] {
     if (!this.selectedUser || !this.conversationsList) return [];
-    // Find the selected conversation by matching the user ID
+
+    // Find the selected conversation by matching the conversation ID
     const conversation = this.conversationsList.find(c => c.id === this.selectedUser?.id);
+
+    // If the conversation exists, enrich each message with the sender's name
+    if (conversation) {
+      // Add the sender's name to each message
+      conversation.chatMessages.forEach((message: { sender: any; senderName: any; }) => {
+        const sender = conversation.participants.find((p: { userId: any; }) => p.userId === message.sender);
+        message.senderName = sender ? sender.participantName : 'Unknown';  // Default to 'Unknown' if not found
+      });
+    }
+
     // Return the messages for the conversation or an empty array
     return conversation?.chatMessages || [];
   }
@@ -722,24 +707,6 @@ export class MainPageComponent implements OnInit {
     return this.selectedMembers.some(member => member.userId === participantId);
   }
 
-  extractContacts(): void {
-    // Create a Set to track unique userIds
-    const contactMap = new Map<number, any>();
-
-    this.conversationsList.forEach((conversation) => {
-      conversation.participants.forEach((participant: any) => {
-        if (participant.userId !== this.currentUserId && !contactMap.has(participant.userId)) {
-          // Add participant to the contacts list if not already added
-          contactMap.set(participant.userId, participant);
-        }
-      });
-    });
-
-    // Convert Map values to an array to get the unique contacts
-    this.contacts = Array.from(contactMap.values());
-    console.log('Extracted Contacts:', this.contacts);
-  }
-
   toggleMemberSelection(participant: any): void {
     if (this.isMemberSelected(participant.userId)) {
       this.removeFromGroup(participant.userId);
@@ -761,8 +728,10 @@ export class MainPageComponent implements OnInit {
 
     const groupPayload = {
       Admin: this.currentUserId,
-      participants: this.selectedMembers.map(member => member.userId),
+      participants: [this.currentUserId, ...this.selectedMembers.map(member => member.userId)],
     };
+
+    console.log("Group participants:", groupPayload.participants);
 
     this.groupCreationService.createGroup(groupPayload.Admin, groupPayload.participants).subscribe(
       (response) => {

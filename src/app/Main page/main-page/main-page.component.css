@@ -76,7 +76,7 @@
     height: 48px;
     border-radius: 50%;
     border: 2px solid #fff;
-    object-fit: cover;
+    object-fit: scale-down;
     cursor: pointer;
 }
 
@@ -313,7 +313,7 @@
     font-weight: bold;
 }
 
-.selected-member{
+.selected-member {
     font-weight: bolder;
     color: #005ae0;
 }
@@ -348,6 +348,14 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 100%;
+}
+
+.content-contacts {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
     height: 100%;
 }
 
@@ -565,4 +573,128 @@
 .like-btn img {
     width: 24px;
     height: 24px;
+}
+
+.message-sender {
+    font-size: small;
+    color: #999;
+}
+
+.friends-list-header {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    /* Gradient background */
+    padding: 20px 0;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    /* Space below the header */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    text-transform: uppercase;
+    /* Uppercase text for impact */
+    letter-spacing: 1px;
+    /* Slight spacing between letters */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Smooth animation on hover */
+}
+
+.friends-list-header:hover {
+    transform: translateY(-5px);
+    /* Slight upward movement on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    /* Deeper shadow on hover */
+}
+
+/* Optional: Add an icon before the header text */
+.friends-list-header::before {
+    content: url('https://img.icons8.com/ios/50/ffffff/user-group.png');
+    /* Example icon */
+    margin-right: 15px;
+    vertical-align: middle;
+}
+
+/* Optional: Add animation to the header on page load */
+@keyframes header-animation {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.friends-list-header {
+    animation: header-animation 0.6s ease-out;
+}
+
+.contacts-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    /* Light background for each contact */
+    border-radius: 8px;
+    /* Rounded corners */
+    transition: background-color 0.3s ease;
+    border-bottom: 5px solid #eee;
+    /* Smooth background color transition */
+}
+
+.contact-item:hover {
+    background-color: #f0f8ff;
+    /* Light blue hover effect */
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+}
+
+.contact-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* Ensures the image fits nicely */
+    margin-right: 15px;
+    border: 2px solid #ddd;
+    /* Light border around the avatar */
+}
+
+.contact-name {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    /* Capitalize first letter of each word */
+    transition: color 0.3s ease;
+    /* Smooth transition on hover */
+}
+
+.contact-item:hover .contact-name {
+    color: #007bff;
+    /* Change text color on hover */
+}
+
+/* Add a subtle shadow around the whole contact card */
+.contact-item {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.contact-item:last-child {
+    margin-bottom: 0;
+    /* Remove bottom margin for the last item */
 }
