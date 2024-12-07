@@ -170,14 +170,23 @@
                     <button class="header-btn" title="Xóa thành viên" (click)="openRemoveMemberDialog()">
                         <img src="assets/people (2).png" alt="Remove Main">
                     </button>
-                    <button class="header-btn" title="Video Call">
-                        <img src="assets/camera.png" alt="Video Call">
+                    <button class="header-btn" title="Xóa hội thoại" (click)="deleteConversation()">
+                        <img src="assets/delete_conv.png" alt="Delete Conversation">
                     </button>
                 </div>
+
+                <!-- Remove Member Confirmation Dialog -->
+                <mat-dialog-content *ngIf="removeConversationDialogOpen">
+                    <h3>Bạn có chắc chắn muốn xóa cuộc trò chuyện này?</h3>
+                    <div class="button-container">
+                        <button mat-button (click)="confirmRemove()">Xác nhận</button>
+                        <button mat-button (click)="cancelRemove()">Hủy bỏ</button>
+                    </div>
+                </mat-dialog-content>
             </div>
 
             <!-- Chatting part -->
-            <div class="chatting-part">
+            <div class="chatting-part" #chatContainer>
                 <div *ngIf="selectedUser">
                     <div *ngFor="let message of getConversationMessages()"
                         [ngClass]="{'message': true, 'you': message.sender === currentUserId, 'sender': message.sender !== currentUserId}">
@@ -283,6 +292,42 @@
                     </li>
                 </ul>
             </div>
+        </div>
+
+        <!-- User Profile Edit Section -->
+        <div *ngIf="activeView === 'edit-profile' && showProfileEdit" class="profile-edit-section">
+            <h2>Chỉnh sửa hồ sơ của bạn</h2>
+            <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
+                <div class="form-group">
+                    <label for="name" class="edit-name">Tên</label>
+                    <input type="text" id="name" [(ngModel)]="currentUserName" name="name" required
+                        class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="edit-name">Số điện thoại</label>
+                    <input type="text" id="phone" [(ngModel)]="currentUserPhone" name="phone" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="edit-name">Địa chỉ email</label>
+                    <input type="email" id="email" [(ngModel)]="currentUserEmail" name="email" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdate" class="edit-name">Ngày tháng năm sinh</label>
+                    <input type="date" id="birthdate" [(ngModel)]="currentUserBirthdate" name="birthdate"
+                        class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="avatar" class="edit-name">Ảnh đại diện</label>
+                    <input type="file" id="avatar" (change)="handleAvatarUpdate($event)" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Hủy bỏ</button>
+            </form>
         </div>
     </main>
 </div>

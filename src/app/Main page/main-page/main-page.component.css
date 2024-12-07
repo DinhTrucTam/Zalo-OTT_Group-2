@@ -105,7 +105,6 @@
     /* Optional: remove the outline when clicked */
 }
 
-
 .top-menu,
 .bottom-menu {
     list-style: none;
@@ -261,6 +260,18 @@
 }
 
 .chat-item {
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -390,10 +401,22 @@
 /* Conversation Box */
 
 .conversation-header {
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 20px;
     padding-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
@@ -440,12 +463,25 @@
 }
 
 .chatting-part {
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
     display: flex;
     flex-direction: column;
     padding: 15px;
     overflow-y: auto;
     background-color: #e0e0e0;
     height: calc(100vh - 213px);
+    scroll-behavior: smooth;
 }
 
 .message {
@@ -701,4 +737,200 @@
 .contact-item:last-child {
     margin-bottom: 0;
     /* Remove bottom margin for the last item */
+}
+
+/* Style for the dialog container */
+mat-dialog-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    max-height: 80px;
+    margin-top: 15px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Heading style */
+mat-dialog-content h3 {
+    padding: 5px;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
+}
+
+/* Style for the buttons */
+mat-dialog-content button {
+    font-family: SegoeuiPc,
+        Segoe UI,
+        San Francisco,
+        Helvetica Neue,
+        Helvetica,
+        Lucida Grande,
+        Roboto,
+        Ubuntu,
+        Tahoma,
+        Microsoft Sans Serif,
+        Arial,
+        sans-serif;
+    font-weight: 500;
+    padding: 5px;
+    margin: 5px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* 'Yes' button - Green for confirming */
+mat-dialog-content button:first-child {
+    background-color: #4caf50;
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 128, 0, 0.3);
+}
+
+/* 'No' button - Red for canceling */
+mat-dialog-content button:last-child {
+    background-color: #f44336;
+    color: white;
+    box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.3);
+}
+
+/* Hover effect on the buttons */
+mat-dialog-content button:hover {
+    transform: scale(1.05);
+}
+
+/* Button focus styles */
+mat-dialog-content button:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px rgba(76, 175, 80, 0.5);
+}
+
+/* Profile edit section */
+.profile-edit-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    /* Center horizontally */
+    position: relative;
+}
+
+/* Heading styling */
+.profile-edit-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    /* Center the heading text */
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 400px;
+    /* Optional: limit the width of the form groups */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center-align form elements */
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+    /* Center the label text */
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Remove padding for file input */
+.form-group input[type="file"] {
+    padding: 0;
+}
+
+/* Button styling */
+.btn {
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    /* Smooth transition for hover and focus effects */
+    outline: none;
+    text-align: center;
+    margin-top: 15px;
+    /* Space between buttons */
+}
+
+/* Primary button style */
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-primary:active {
+    background-color: #388e3c;
+}
+
+/* Secondary button style */
+.btn-secondary {
+    background-color: #f44336;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-secondary:hover {
+    background-color: #e53935;
+}
+
+.btn-secondary:active {
+    background-color: #c62828;
+}
+
+/* Responsive styling for smaller devices */
+@media (max-width: 768px) {
+    .profile-edit-section {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
 }

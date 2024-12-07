@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, AfterViewChecked } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ConversationService } from './Services/conversation.service';
 import { SearchingService } from './Services/searching.service';
@@ -14,6 +14,7 @@ import { ContactDialogComponent } from '../../contact-dialog/contact-dialog.comp
 import { RemoveMemberService } from './Services/removemember.service';
 import { RemoveMemberDialogComponent } from '../../remove-member-dialog/remove-member-dialog.component';
 import { MessageInputDialogComponent } from '../../message-input-dialog/message-input-dialog.component';
+import { RemoveConversationService } from './Services/removeconversation.service';
 
 // Define User and Conversation interfaces
 interface User {
@@ -39,7 +40,8 @@ interface Conversations {
   styleUrls: ['./main-page.component.css']
 })
 
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, AfterViewChecked {
+  @ViewChild('chatContainer') private chatContainer: ElementRef | undefined;
   private socket$!: WebSocketSubject<any>; // WebSocket for real-time messaging
 
   //constructor//
@@ -53,7 +55,8 @@ export class MainPageComponent implements OnInit {
     private groupCreationService: GroupCreationService,
     private dialog: MatDialog,
     private addMemberService: AddMemberService,
-    private removeMemberService: RemoveMemberService) { }
+    private removeMemberService: RemoveMemberService,
+    private removeConversationService: RemoveConversationService) { }
 
   //parameters//
   isMenuVisible: boolean = false; // To track the visibility of the menu
@@ -80,6 +83,11 @@ export class MainPageComponent implements OnInit {
   currentConversationId: any;
   filteredContacts: any[] = [];
   filteredGroups: any[] = [];
+  removeConversationDialogOpen = false; // Flag to track dialog state
+  currentUserPhone: string = '';  // User's phone number
+  currentUserEmail: string = '';  // User's email
+  currentUserBirthdate: string = '';  // User's birthdate
+  showProfileEdit: boolean = false;  // Toggle for showing profile edit form
 
   //this function is called whenever the main page is reloaded/accessed
   ngOnInit(): void {
@@ -95,6 +103,14 @@ export class MainPageComponent implements OnInit {
     // setInterval(() => {
     //   this.fetchConversations();
     // }, 1000);
+  }
+
+  ngAfterViewChecked(): void {
+    // Scroll to the bottom when the view is updated with new messages
+    if (this.chatContainer) {
+      const container = this.chatContainer.nativeElement;
+      container.scrollTop = container.scrollHeight;
+    }
   }
 
   // Function to set the active view
@@ -654,7 +670,30 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  onClick(): void { }
+  onClick(): void {
+    this.showProfileEdit = true;
+    this.setActiveView('edit-profile');
+  }
+
+  cancelEdit(): void {
+    // Close the profile editing form
+    this.showProfileEdit = false;
+  }
+
+  updateProfile(): void {
+    // Handle profile update logic here
+    console.log('Profile Updated:', {
+      name: this.currentUserName,
+      phone: this.currentUserPhone,
+      email: this.currentUserEmail,
+      birthdate: this.currentUserBirthdate,
+      avatar: this.currentUserPhoto
+    });
+
+    // After updating the profile, close the form
+    this.showProfileEdit = false;
+  }
+
 
   getConversationMessages(): any[] {
     if (!this.selectedUser || !this.conversationsList) return [];
@@ -860,6 +899,33 @@ export class MainPageComponent implements OnInit {
         this.removeParticipant(participantId, this.currentConversationId);
       }
     });
+  }
+
+  deleteConversation(): void {
+    this.removeConversationDialogOpen = true;
+    // Optionally, set the selected conversationId here
+    // this.selectedConversationId = someId; // set it based on your logic
+  }
+
+  cancelRemove(): void {
+    this.removeConversationDialogOpen = false;
+  }
+
+  confirmRemove(): void {
+    if (this.currentConversationId !== null) {
+      // Call the service to remove the participant
+      this.removeConversationService.removeParticipant(this.currentConversationId).subscribe({
+        next: (response) => {
+          console.log('Participant removed successfully:', response);
+          this.removeConversationDialogOpen = false;
+          // Handle successful response (e.g., show a success message)
+        },
+        error: (error) => {
+          console.error('Error removing participant:', error);
+          // Handle error (e.g., show an error message)
+        }
+      });
+    }
   }
 }
 

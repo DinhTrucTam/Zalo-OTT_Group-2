@@ -5,6 +5,7 @@
 
 /*reset the default css: margin: 8px*/
 body {
+    max-height:fit-content;
     margin: 0;
 
     .mat-mdc-tab-header {
