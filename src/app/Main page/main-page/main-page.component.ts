@@ -337,57 +337,70 @@ export class MainPageComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // Handle the message (e.g., you can call a method to send the message)
-        console.log('User entered message:', result);
+        const { message, response } = result; // Destructure message and response
+        console.log('User entered message:', message);
+        console.log('Response:', response);
         this.toastr.success("Kết bạn thành công!", 'success');
         this.fetchConversations();
-        const groupPayload = {
-          Admin: this.currentUserId,
-          participants: this.selectedMembers.map(member => member.userId),
+        //resend the message
+        if (!this.socket$) {
+          console.error('WebSocket is not connected.');
+          this.setupWebSocket(); // Attempt to reconnect
+          return;
+        }
+        //this.sendMessage();
+        const newMessage = {
+          content: ('Day la tin nhan de ket ban: ' + '\n' + message).trim(),
+          contentType: 'TEXT',
+          conversationId: response.id,
+          senderId: this.currentUserId,
         };
 
-        this.groupCreationService.createGroup(groupPayload.Admin, groupPayload.participants).subscribe(
-          (response) => {
-            console.log('Group created successfully:', response);
-            this.toastr.success('Tạo nhóm thành công!', 'Success');
-            //resend the message
-            if (!this.selectedUser || !result.trim()) {
-              console.error('No user selected or message is empty.');
-              return;
-            }
+        try {
+          this.socket$.next(newMessage); // Send the message
+          console.log('Message sent:', newMessage);
+          this.fetchConversations();
+          // Clear input field
+          this.messageText = '';
+        } catch (err) {
+          console.error('Error sending message:', err);
+          //this.setupWebSocket(); // Attempt to reconnect
+        }
+        //   (response) => {
+        //     this.toastr.success('Tạo nhóm thành công!', 'Success');
+        //     //resend the message
+        //     if (!this.socket$) {
+        //       console.error('WebSocket is not connected.');
+        //       this.setupWebSocket(); // Attempt to reconnect
+        //       return;
+        //     }
+        //     this.messageText = result;
+        //     //this.sendMessage();
+        //     const newMessage = {
+        //       content: this.messageText.trim(),
+        //       contentType: 'TEXT',
+        //       conversationId: result.id,
+        //       senderId: groupPayload.Admin,
+        //     };
 
-            if (!this.socket$) {
-              console.error('WebSocket is not connected.');
-              this.setupWebSocket(); // Attempt to reconnect
-              return;
-            }
-
-            const newMessage = {
-              content: result.trim(),
-              contentType: 'TEXT',
-              conversationId: this.selectedUser.id,
-              senderId: this.currentUserId,
-            };
-
-            try {
-              this.socket$.next(newMessage); // Send the message
-              console.log('Message sent:', newMessage);
-              this.fetchConversations();
-              // Clear input field
-              result = '';
-            } catch (err) {
-              console.error('Error sending message:', err);
-              //this.setupWebSocket(); // Attempt to reconnect
-            }
-            this.selectedMembers = []; // Reset selected members
-          },
-          (error) => {
-            console.error('Error creating group:', error);
-            this.toastr.error('Tạo nhóm thất bại.', 'error');
-          }
-        );
+        //     try {
+        //       this.socket$.next(newMessage); // Send the message
+        //       console.log('Message sent:', newMessage);
+        //       this.fetchConversations();
+        //       // Clear input field
+        //       this.messageText = '';
+        //     } catch (err) {
+        //       console.error('Error sending message:', err);
+        //       //this.setupWebSocket(); // Attempt to reconnect
+        //     }
+        //   },
+        //   (error) => {
+        //     console.error('Error creating group:', error);
+        //     this.toastr.error('Tạo nhóm thất bại.', 'error');
+        //   }
+        // );
       }
     });
   }
@@ -715,10 +728,6 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  removeFromGroup(participantId: number): void {
-    this.selectedMembers = this.selectedMembers.filter(member => member.userId !== participantId);
-  }
-
   createGroup(): void {
     if (this.selectedMembers.length === 0) {
       alert('Please select at least one member to create a group.');
@@ -802,6 +811,27 @@ export class MainPageComponent implements OnInit {
     );
   }
 
+  removeFromGroup(participantId: number): void {
+    this.selectedMembers = this.selectedMembers.filter(member => member.userId !== participantId);
+  }
+
+  // Remove participant using the service
+  removeParticipant(participantId: number, conversationId: number): void {
+    this.removeMemberService.removeParticipant(participantId, conversationId).subscribe(
+      (response) => {
+        console.log('Participant removed successfully:', response);
+        this.toastr.success('Thành viên đã được xóa thành công!', 'Success');
+
+        // Refresh conversation list
+        this.fetchConversations();
+      },
+      (error) => {
+        console.error('Error removing participant:', error);
+        this.toastr.error('Lỗi khi xóa thành viên. Vui lòng thử lại!', 'Error');
+      }
+    );
+  }
+
   // Open dialog to remove a member
   openRemoveMemberDialog(): void {
     if (!this.currentConversationId) {
@@ -831,21 +861,8 @@ export class MainPageComponent implements OnInit {
       }
     });
   }
+}
 
-  // Remove participant using the service
-  removeParticipant(participantId: number, conversationId: number): void {
-    this.removeMemberService.removeParticipant(participantId, conversationId).subscribe(
-      (response) => {
-        console.log('Participant removed successfully:', response);
-        this.toastr.success('Thành viên đã được xóa thành công!', 'Success');
-
-        // Refresh conversation list
-        this.fetchConversations();
-      },
-      (error) => {
-        console.error('Error removing participant:', error);
-        this.toastr.error('Lỗi khi xóa thành viên. Vui lòng thử lại!', 'Error');
-      }
-    );
-  }
+function result(value: any): void {
+  throw new Error('Function not implemented.');
 }

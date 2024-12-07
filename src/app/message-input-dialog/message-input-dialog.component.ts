@@ -29,7 +29,7 @@ export class MessageInputDialogComponent {
           console.log('Group created successfully:', response);
 
           // Close the dialog after successful group creation
-          this.dialogRef.close(this.message); // Send the message back to the caller
+          this.dialogRef.close({ message: this.message, response: response });
         },
         error: (error) => {
           console.error('Error creating group:', error);
