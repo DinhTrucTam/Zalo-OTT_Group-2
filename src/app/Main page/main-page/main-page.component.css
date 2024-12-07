@@ -878,10 +878,19 @@ mat-dialog-content button:focus {
     padding: 0;
 }
 
+/* Button container */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    /* Evenly spaces the buttons */
+    width: 100%;
+    /* Ensures the container takes up full width */
+}
+
 /* Button styling */
 .btn {
     padding: 12px 25px;
-    font-size: 18px;
+    font-size: 0.9rem;
     font-weight: 600;
     border: none;
     border-radius: 8px;
@@ -892,6 +901,15 @@ mat-dialog-content button:focus {
     text-align: center;
     margin-top: 15px;
     /* Space between buttons */
+    flex: 1;
+    /* Makes buttons take equal width */
+    margin-right: 10px;
+    /* Optional margin between buttons */
+}
+
+.btn:last-child {
+    margin-right: 0;
+    /* Removes right margin from the last button */
 }
 
 /* Primary button style */

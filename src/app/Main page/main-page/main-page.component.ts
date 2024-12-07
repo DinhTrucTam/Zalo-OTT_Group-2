@@ -435,6 +435,7 @@ export class MainPageComponent implements OnInit, AfterViewChecked {
       alert('No conversations found with this user.');
       this.openMessageInputDialog(selectedUser); // Open dialog to create a new conversation
     }
+    this.searchInput = selectedUser.participantName;
   }
 
   resetView(): void {
@@ -694,7 +695,6 @@ export class MainPageComponent implements OnInit, AfterViewChecked {
     this.showProfileEdit = false;
   }
 
-
   getConversationMessages(): any[] {
     if (!this.selectedUser || !this.conversationsList) return [];
 
@@ -918,6 +918,9 @@ export class MainPageComponent implements OnInit, AfterViewChecked {
         next: (response) => {
           console.log('Participant removed successfully:', response);
           this.removeConversationDialogOpen = false;
+          this.setActiveView('conversations');
+          this.selectedUser = null;
+          this.fetchConversations();
           // Handle successful response (e.g., show a success message)
         },
         error: (error) => {
@@ -927,8 +930,4 @@ export class MainPageComponent implements OnInit, AfterViewChecked {
       });
     }
   }
-}
-
-function result(value: any): void {
-  throw new Error('Function not implemented.');
 }
